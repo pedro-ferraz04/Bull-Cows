@@ -3,6 +3,7 @@ module BullsCows (
   input confirm,
   input clock,
   input reset
+  output state_t state,
 );
     
 typedef enum logic { 
@@ -10,18 +11,23 @@ typedef enum logic {
   SECRET_J2,
   GUESS_J1,
   GUESS_J2,
+  DISPLAY_RESULT_J1,
+  DISPLAY_RESULT_J2,
+  WIN,  // <- Vou fazer a ideia de ter um estado para vitoria
   FIM
 } state_t;
 
-state_t state, next_state;
+state_t next_state;
 logic [3:0] bulls, cows;
 logic [15:0] secret_j1, secret_j2;
 logic [15:0] guess_i;
 logic confirmed;
 logic [63:0] bullseye := 64'b11111111
+logic win_flag; // <- Achei mais facil pensar desse jeito
 
 -- 8 1's para o b
 
+assign win_flag = (state == WIN);
 
 always_ff @(posedge clock , posedge reset) begin
   if (reset) begin
@@ -46,6 +52,50 @@ always_ff @(posedge clock , posedge reset) begin
       end
 
       GUESS_J1: begin
+        next_state <= GUESS_J1;
+        if (confirmed) begin
+          bulls <= 000;
+
+          if (guess_i[3:0] == secret_j2[3:0]) begin
+            bulls <= bulls + 1;
+          end
+          if (guess_i[7:4] == secret_j2[7:4]) begin
+            bulls <= bulls + 1;
+          end
+          if (guess_i[11:8] == secret_j2[11:8]) begin
+            bulls <= bulls + 1;
+          end
+          if (guess_i[15:12] == secret_j2[15:12]) begin
+            bulls <= bulls + 1;
+          end
+
+          cows <= 000;
+
+          if (guess_i[3:0] == secret_j2[7:4] || guess_i[3:0] == secret_j2[11:8] || guess_i[3:0] == secret_j2[15:12]) begin
+            cows <= cows + 1;
+          end
+          if (guess_i[7:4] == secret_j2[3:0] || guess_i[7:4] == secret_j2[11:8] || guess_i[7:4] == secret_j2[15:12]) begin
+            cows <= cows + 1;
+          end
+          if (guess_i[11:8] == secret_j2[3:0] || guess_i[11:8] == secret_j2[7:4] || guess_i[11:8] == secret_j2[15:12]) begin
+            cows <= cows + 1;
+          end
+          if (guess_i[15:12] == secret_j2[3:0] || guess_i[15:12] == secret_j2[7:4] || guess_i[15:12] == secret_j2[11:8]) begin
+            cows <= cows + 1;
+          end
+
+          if (bulls == 3`b100) begin
+            next_state <= WIN;
+          end else begin 
+            next_state <= DISPLAY_RESULT_J1;
+          end
+
+          confirmed <= 0;
+        end
+      end
+
+      GUESS_J2: begin
+        next_state <= GUESS_J2;
         if (confirmed) begin
           bulls <= 000;
 
@@ -78,20 +128,46 @@ always_ff @(posedge clock , posedge reset) begin
           end
 
           if (bulls == 3`b100) begin
-            -- YAAAAAAAAAAA
+            next_state <= WIN;
           end else begin 
-            -- imprimi
+            next_state <= DISPLAY_RESULT_J2;
           end
 
-          state <= GUESS_J2;
+          confirmed <= 0;
+        end
+      end
+      end
+
+      DISPLAY_RESULT_J1: begin
+        next_state <= DISPLAY_RESULT_J1;
+
+        if (confirmed) begin
+          next_state <= GUESS_J2;
+          confirmed <= 0;
         end
       end
 
-      GUESS_J2: begin
-        guess_j2 <= guess_i;
+      DISPLAY_RESULT_J2: begin
+        next_state <= DISPLAY_RESULT_J2;
+
+        if (confirmed) begin
+          next_state <= GUESS_J1;
+          confirmed <= 0;
+        end
+      end
+
+      WIN: begin
+        next_state <= WIN;
+
+        if (confirmed) begin
+          next_state <= SECRET_J1;
+          confirmed <= 0;
+        end
       end
 
       FIM: begin
+        // Logica para quando alguem fizer 4 pontos
+        // Ou seja, quando alguem ganhar
       end
     endcase
   end

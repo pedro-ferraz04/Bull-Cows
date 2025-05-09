@@ -87,21 +87,21 @@ module dspl_drv_NexysA7
   always @*
   begin
     case (selected_dig[4:1])
-      4'h0 : dec_ddp[7:1] = 7'b0000001;
-      4'h1 : dec_ddp[7:1] = 7'b1001111;
-      4'h2 : dec_ddp[7:1] = 7'b0010010;
-      4'h3 : dec_ddp[7:1] = 7'b0000110;
-      4'h4 : dec_ddp[7:1] = 7'b1001100;
-      4'h5 : dec_ddp[7:1] = 7'b0100100;
-      4'h6 : dec_ddp[7:1] = 7'b0100000;
-      4'h7 : dec_ddp[7:1] = 7'b0001111;
-      4'h8 : dec_ddp[7:1] = 7'b0000000;
-      4'h9 : dec_ddp[7:1] = 7'b0000100;
-      4'hA : dec_ddp[7:1] = 7'b0001000;
-      4'hB : dec_ddp[7:1] = 7'b1100000;
-      4'hC : dec_ddp[7:1] = 7'b0110001;
-      4'hD : dec_ddp[7:1] = 7'b1000010;
-      4'hE : dec_ddp[7:1] = 7'b0110000;
+      4'h0 : dec_ddp[7:1] = 7'b0000001; // 0
+      4'h1 : dec_ddp[7:1] = 7'b1001111; // 1
+      4'h2 : dec_ddp[7:1] = 7'b0010010; // 2
+      4'h3 : dec_ddp[7:1] = 7'b0000110; // 3
+      4'h4 : dec_ddp[7:1] = 7'b1001100; // 4 "Y"
+      4'h5 : dec_ddp[7:1] = 7'b0100100; // 5 "S"
+      4'h6 : dec_ddp[7:1] = 7'b0100000; // 6 "G"
+      4'h7 : dec_ddp[7:1] = 7'b0001111; // 7 "T"
+      4'h8 : dec_ddp[7:1] = 7'b0000000; // 8 "B"
+      4'h9 : dec_ddp[7:1] = 7'b1110001; // L
+      4'hA : dec_ddp[7:1] = 7'b0001000; // A
+      4'hB : dec_ddp[7:1] = 7'b1000111; // J
+      4'hC : dec_ddp[7:1] = 7'b1000001; // U V
+      4'hD : dec_ddp[7:1] = 7'b0011000; // P
+      4'hE : dec_ddp[7:1] = 7'b0110000; // E
       default : dec_ddp[7:1] = 7'b0111000;
     endcase
     dec_ddp[0] = selected_dig[0];
