@@ -84,25 +84,25 @@ case (current_state)
     end
 
     DISPLAY_RESULT_J1: begin
-        d1 = 6'b000000; // "X" -- Aqui tem que por o valor
-        d2 = 6'b100000; // " " -- de bulls (nao sei como)
-        d3 = 6'b000111; // "T"
-        d4 = 6'b000000; // "O"
-        d5 = 6'b000000; // "X" -- Aqui das vacas
-        d6 = 6'b100000; // " "
-        d7 = 6'b001100; // "V"
-        d8 = 6'b001010; // "A"
+        d1 = {1'b0, bulls[3:0], 1'b0}; // "X" Bulls "{anodeOff=0, bulls, DP=0}"
+        d2 = 6'b100000;                // " " 
+        d3 = 6'b000111;                // "T"
+        d4 = 6'b000000;                // "O"
+        d5 = {1'b0, cows[3:0], 1'b0};  // "X" Cows "{anodeOff=0, cows, DP=0}
+        d6 = 6'b100000;                // " "
+        d7 = 6'b001100;                // "V"
+        d8 = 6'b001010;                // "A"
     end
 
     DISPLAY_RESULT_J2: begin
-        d1 = 6'b000000; // "X" -- Aqui tem que por o valor
-        d2 = 6'b100000; // " " -- de bulls (nao sei como)
-        d3 = 6'b000111; // "T"
-        d4 = 6'b000000; // "O"
-        d5 = 6'b000000; // "X" -- Aqui das vacas
-        d6 = 6'b100000; // " "
-        d7 = 6'b001100; // "V"
-        d8 = 6'b001010; // "A"
+        d1 = {1'b0, bulls[3:0], 1'b0}; // "X" Bulls "{anodeOff=0, bulls, DP=0}
+        d2 = 6'b100000;                // " " 
+        d3 = 6'b000111;                // "T"
+        d4 = 6'b000000;                // "O"
+        d5 = {1'b0, cows[3:0], 1'b0};  // "X" Cows "{anodeOff=0, cows, DP=0}
+        d6 = 6'b100000;                // " "
+        d7 = 6'b001100;                // "V"
+        d8 = 6'b001010;                // "A"
     end
 
     WIN: begin

@@ -1,31 +1,31 @@
-module BullsCows (
-  input [15:0] guess,
-  input confirm,
-  input clock,
-  input reset
-  output state_t state,
-);
-    
-typedef enum logic { 
+typedef enum logic {
   SECRET_J1,
   SECRET_J2,
   GUESS_J1,
   GUESS_J2,
   DISPLAY_RESULT_J1,
   DISPLAY_RESULT_J2,
-  WIN,  // <- Vou fazer a ideia de ter um estado para vitoria
+  WIN,
   FIM
 } state_t;
+
+module BullsCows (
+  input [15:0] guess,
+  input confirm,
+  input clock,
+  input reset,
+  output state_t state
+  );
 
 state_t next_state;
 logic [3:0] bulls, cows;
 logic [15:0] secret_j1, secret_j2;
 logic [15:0] guess_i;
 logic confirmed;
-logic [63:0] bullseye := 64'b11111111
+logic [63:0] bullseye := 64'b11111111;
 logic win_flag; // <- Achei mais facil pensar desse jeito
 
--- 8 1's para o b
+//  8 1's para o b
 
 assign win_flag = (state == WIN);
 
@@ -37,7 +37,7 @@ always_ff @(posedge clock , posedge reset) begin
     case (state)
       SECRET_J1: begin
         if (confirmed) begin
-          secret_j1 <= guess_i
+          secret_j1 <= guess_i;
           confirmed <= 0;
           state <= SECRET_J2;
         end
@@ -45,7 +45,7 @@ always_ff @(posedge clock , posedge reset) begin
 
       SECRET_J2: begin
         if (confirmed) begin
-          secret_j1 <= guess_i
+          secret_j1 <= guess_i;
           confirmed <= 0;
           state <= GUESS_J1;
         end
@@ -84,7 +84,7 @@ always_ff @(posedge clock , posedge reset) begin
             cows <= cows + 1;
           end
 
-          if (bulls == 3`b100) begin
+          if (bulls == 3'b100) begin
             next_state <= WIN;
           end else begin 
             next_state <= DISPLAY_RESULT_J1;
@@ -127,7 +127,7 @@ always_ff @(posedge clock , posedge reset) begin
             cows <= cows + 1;
           end
 
-          if (bulls == 3`b100) begin
+          if (bulls == 3'b100) begin
             next_state <= WIN;
           end else begin 
             next_state <= DISPLAY_RESULT_J2;
@@ -136,7 +136,7 @@ always_ff @(posedge clock , posedge reset) begin
           confirmed <= 0;
         end
       end
-      end
+    end
 
       DISPLAY_RESULT_J1: begin
         next_state <= DISPLAY_RESULT_J1;
@@ -169,9 +169,6 @@ always_ff @(posedge clock , posedge reset) begin
         // Logica para quando alguem fizer 4 pontos
         // Ou seja, quando alguem ganhar
       end
-    endcase
-  end
-end
 
     always_ff @(posedge confirm) begin
       if (~confirmed) begin
