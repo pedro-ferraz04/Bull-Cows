@@ -22,14 +22,14 @@ logic [3:0] bulls, cows;
 logic [15:0] secret_j1, secret_j2;
 logic [15:0] guess_i;
 logic confirmed;
-logic [63:0] bullseye := 64'b11111111;
+// logic [63:0] bullseye := 64'b11111111; <- Não sei pq isso ta aqui
 logic win_flag; // <- Achei mais facil pensar desse jeito
 
 //  8 1's para o b
 
 assign win_flag = (state == WIN);
 
-always_ff @(posedge clock , posedge reset) begin
+always @(posedge clock or posedge reset) begin
   if (reset) begin
     state <= SECRET_J1;
   end else begin
@@ -38,6 +38,7 @@ always_ff @(posedge clock , posedge reset) begin
       SECRET_J1: begin
         if (confirmed) begin
           secret_j1 <= guess_i;
+          secret_j1_reg <= secret_j1;
           confirmed <= 0;
           state <= SECRET_J2;
         end
@@ -45,7 +46,8 @@ always_ff @(posedge clock , posedge reset) begin
 
       SECRET_J2: begin
         if (confirmed) begin
-          secret_j1 <= guess_i;
+          secret_j2 <= guess_i;
+          secret_j2_reg <= secret_j2;
           confirmed <= 0;
           state <= GUESS_J1;
         end
@@ -137,6 +139,7 @@ always_ff @(posedge clock , posedge reset) begin
         end
       end
     end
+  end
 
       DISPLAY_RESULT_J1: begin
         next_state <= DISPLAY_RESULT_J1;
@@ -169,6 +172,20 @@ always_ff @(posedge clock , posedge reset) begin
         // Logica para quando alguem fizer 4 pontos
         // Ou seja, quando alguem ganhar
       end
+
+always_comb begin
+  logic [15:0] currentSecret;
+  case (state)
+    GUESS_J1: currentSecret = secret_j2;
+    GUESS_J2: currentSecret = secret_j1;
+    default: currentSecret = 16'h0000;
+  endcase
+
+  logic [3:0] bullsTemp, cowsTemp;
+  logic [3:0] guessMaks, secretMask;
+
+  
+end
 
     always_ff @(posedge confirm) begin
       if (~confirmed) begin
