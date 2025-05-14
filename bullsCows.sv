@@ -33,7 +33,7 @@ always @(posedge clock or posedge reset) begin
   if (reset) begin
     state <= SECRET_J1;
   end else begin
-    state <= next_state;
+    state <= state, next_state;
     case (state)
       SECRET_J1: begin
         if (confirmed) begin
