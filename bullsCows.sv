@@ -1,4 +1,12 @@
-typedef enum logic {
+module BullsCows (
+  input [15:0] guess,
+  input confirm,
+  input clock,
+  input reset,
+  output state
+  );
+
+typedef enum {
   SECRET_J1,
   SECRET_J2,
   GUESS_J1,
@@ -9,15 +17,7 @@ typedef enum logic {
   FIM
 } state_t;
 
-module BullsCows (
-  input [15:0] guess,
-  input confirm,
-  input clock,
-  input reset,
-  output state_t state
-  );
-
-state_t state, next_state;
+state_t current_state, next_state;
 logic [3:0] bulls, cows;
 logic [15:0] secret_j1, secret_j2;
 logic [15:0] guess_i;
@@ -31,25 +31,23 @@ assign win_flag = (state == WIN);
 
 always @(posedge clock or posedge reset) begin
   if (reset) begin
-    state <= SECRET_J1;
+    current_state <= SECRET_J1;
   end else begin
-    state <= state, next_state;
+    current_state <= next_state;
     case (state)
       SECRET_J1: begin
         if (confirmed) begin
           secret_j1 <= guess_i;
-          secret_j1_reg <= secret_j1;
           confirmed <= 0;
-          state <= SECRET_J2;
+          current_state <= SECRET_J2;
         end
       end
 
       SECRET_J2: begin
         if (confirmed) begin
           secret_j2 <= guess_i;
-          secret_j2_reg <= secret_j2;
           confirmed <= 0;
-          state <= GUESS_J1;
+          current_state <= GUESS_J1;
         end
       end
 
@@ -138,8 +136,6 @@ always @(posedge clock or posedge reset) begin
           confirmed <= 0;
         end
       end
-    end
-  end
 
       DISPLAY_RESULT_J1: begin
         next_state <= DISPLAY_RESULT_J1;
@@ -172,26 +168,27 @@ always @(posedge clock or posedge reset) begin
         // Logica para quando alguem fizer 4 pontos
         // Ou seja, quando alguem ganhar
       end
-
-always_comb begin
-  logic [15:0] currentSecret;
-  case (state)
-    GUESS_J1: currentSecret = secret_j2;
-    GUESS_J2: currentSecret = secret_j1;
-    default: currentSecret = 16'h0000;
-  endcase
-
-  logic [3:0] bullsTemp, cowsTemp;
-  logic [3:0] guessMaks, secretMask;
-
-  
+    endcase
+  end
 end
 
-    always_ff @(posedge confirm) begin
-      if (~confirmed) begin
-        guess_i <= guess;
-        confirmed <= 1;
-      end
-    end
+//always_comb begin
+  //logic [15:0] currentSecret;
+  //case (state)
+    //GUESS_J1: currentSecret = secret_j2;
+    //GUESS_J2: currentSecret = secret_j1;
+    //default: currentSecret = 16'h0000;
+  //endcase
+//
+  //logic [3:0] bullsTemp, cowsTemp;
+  //logic [3:0] guessMaks, secretMask;
+//end
+
+always_ff @(posedge confirm) begin
+  if (~confirmed) begin
+    guess_i <= guess;
+    confirmed <= 1;
+  end
+end
 
 endmodule
