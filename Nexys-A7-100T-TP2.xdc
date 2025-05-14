@@ -11,7 +11,7 @@ set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets ssr_IBUF]
 set_property -dict { PACKAGE_PIN E3    IOSTANDARD LVCMOS33 } [get_ports clock];
 create_clock -period 10.000 -name sys_clk_pin -waveform {0.000 5.000} -add [get_ports clock];
 
-##SwitchesbullsCows_Top
+##Switches
 set_property -dict { PACKAGE_PIN J15   IOSTANDARD LVCMOS33 } [get_ports { SW[0] }]; #?? Sch=sw[0]
 set_property -dict { PACKAGE_PIN L16   IOSTANDARD LVCMOS33 } [get_ports { SW[1] }]; #IO_L3N_T0_DQS_EMCCLK_14 Sch=sw[1]
 set_property -dict { PACKAGE_PIN M13   IOSTANDARD LVCMOS33 } [get_ports { SW[2] }]; #IO_L6N_T0_D08_VREF_14 Sch=sw[2]

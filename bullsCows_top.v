@@ -1,11 +1,11 @@
 module bullsCows_top(
-    input wire clock, // XDC: clock
-    input wire CPU_RESETN, // XDC: reset
-    input wire [15:0] SW, // XDC: as 16 chaves (switches)
-    input wire [4:0] confirm, // XDC: btnc botao do meio, nosso confirm
+    input logic clock, // XDC: clock
+    input logic CPU_RESETN, // XDC: reset
+    input logic [15:0] SW, // XDC: as 16 chaves (switches)
+    input logic confirm, // XDC: btnc botao do meio, nosso confirm
 
-    output wire [7:0] an, // XDC: anodos
-    output wire [7:0] seg, // XDC: 8 segmentos
+    output logic [7:0] an, // XDC: anodos
+    output logic [7:0] seg, // XDC: 8 segmentos
 );
 
 typedef enum logic {

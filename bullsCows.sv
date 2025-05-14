@@ -17,7 +17,7 @@ module BullsCows (
   output state_t state
   );
 
-state_t next_state;
+state_t state, next_state;
 logic [3:0] bulls, cows;
 logic [15:0] secret_j1, secret_j2;
 logic [15:0] guess_i;
