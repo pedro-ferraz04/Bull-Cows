@@ -1,9 +1,11 @@
-module BullsCows (
-  input [15:0] guess,
-  input confirm,
-  input clock,
-  input reset,
-  output state
+module bullsCows (
+  input logic [15:0] guess,
+  input logic confirm,
+  input logic clock,
+  input logic reset,
+  output logic state,
+  output logic [3:0] bulls,
+  output logic [3:0] cows
   );
 
 typedef enum {
@@ -18,7 +20,6 @@ typedef enum {
 } state_t;
 
 state_t current_state, next_state;
-logic [3:0] bulls, cows;
 logic [15:0] secret_j1, secret_j2;
 logic [15:0] guess_i;
 logic confirmed;

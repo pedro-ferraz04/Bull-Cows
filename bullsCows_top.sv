@@ -5,10 +5,10 @@ module bullsCows_top(
     input logic confirm, // XDC: btnc botao do meio, nosso confirm
 
     output logic [7:0] an, // XDC: anodos
-    output logic [7:0] seg, // XDC: 8 segmentos
+    output logic [7:0] seg // XDC: 8 segmentos
 );
 
-typedef enum logic {
+typedef enum {
    SECRET_J1,
    SECRET_J2,
    GUESS_J1,
@@ -45,7 +45,7 @@ logic [6:0] seg_out;
 assign internal_clock = clock;
 assign internal_reset = ~CPU_RESETN;
 assign guess_input = SW;
-assign confirm_input = confirm[0];
+assign confirm_input = confirm;
 
 bullsCows u_bullsCows(
     .guess(guess_input),
@@ -54,7 +54,6 @@ bullsCows u_bullsCows(
     .reset(internal_reset),
 
     .state(game_state),
-    .win_flag(win_flag),
     .bulls(bulls),
     .cows(cows)
 );
@@ -80,6 +79,7 @@ display_manager u_display_manager(
 dspl_drv_NexysA7 u_display_driver (
     .clock(internal_clock),
     .reset(internal_reset),
+    
     .d1(display_data_d1),
     .d2(display_data_d2),
     .d3(display_data_d3),
@@ -90,7 +90,7 @@ dspl_drv_NexysA7 u_display_driver (
     .d8(display_data_d8),
 
     .an(an_out),
-    .seg(seg_out),
+    .dec_ddp(seg_out)
 );
 
 assign an = an_out;
