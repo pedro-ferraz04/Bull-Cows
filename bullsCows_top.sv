@@ -28,7 +28,7 @@ logic [7:0] an_out;
 logic [6:0] seg_out;
 
 assign internal_clock = clock;
-assign internal_reset = ~CPU_RESETN;
+assign internal_reset = ~CPU_RESETN; // TODO na ignorancia pq negar?
 assign guess_input = SW;
 assign confirm_input = confirm;
 
