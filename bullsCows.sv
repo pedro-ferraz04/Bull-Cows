@@ -23,10 +23,7 @@ state_t current_state, next_state;
 logic [15:0] secret_j1, secret_j2;
 logic [15:0] guess_i;
 logic confirmed;
-// logic [63:0] bullseye := 64'b11111111; <- Não sei pq isso ta aqui
-logic win_flag; // <- Achei mais facil pensar desse jeito
-
-//  8 1's para o b
+logic win_flag;
 
 assign win_flag = (state == WIN);
 
@@ -34,13 +31,13 @@ always @(posedge clock or posedge reset) begin
   if (reset) begin
     current_state <= SECRET_J1;
   end else begin
-    current_state <= next_state;
+    current_state <= next_state; // TODO esquisito, para isso o next tem q ter sido atualizado
     case (state)
       SECRET_J1: begin
         if (confirmed) begin
           secret_j1 <= guess_i;
           confirmed <= 0;
-          current_state <= SECRET_J2;
+          next_state <= SECRET_J2;
         end
       end
 
@@ -48,7 +45,7 @@ always @(posedge clock or posedge reset) begin
         if (confirmed) begin
           secret_j2 <= guess_i;
           confirmed <= 0;
-          current_state <= GUESS_J1;
+          next_state <= GUESS_J1;
         end
       end
 
@@ -85,7 +82,7 @@ always @(posedge clock or posedge reset) begin
             cows <= cows + 1;
           end
 
-          if (bulls == 3'b100) begin
+          if (bulls == 3'b100) begin // se ha tres bulls, vitoria!
             next_state <= WIN;
           end else begin 
             next_state <= DISPLAY_RESULT_J1;
@@ -128,7 +125,7 @@ always @(posedge clock or posedge reset) begin
             cows <= cows + 1;
           end
 
-          if (bulls == 3'b100) begin
+          if (bulls == 3'b100) begin // se ha tres bulls, vitoria!
             next_state <= WIN;
           end else begin 
             next_state <= DISPLAY_RESULT_J2;
@@ -138,7 +135,7 @@ always @(posedge clock or posedge reset) begin
         end
       end
 
-      DISPLAY_RESULT_J1: begin
+      DISPLAY_RESULT_J1: begin // TODO displays so esperam o confirm?
         next_state <= DISPLAY_RESULT_J1;
 
         if (confirmed) begin
@@ -168,24 +165,13 @@ always @(posedge clock or posedge reset) begin
       FIM: begin
         // Logica para quando alguem fizer 4 pontos
         // Ou seja, quando alguem ganhar
+        // TODO tirar fora ate
       end
     endcase
   end
 end
 
-//always_comb begin
-  //logic [15:0] currentSecret;
-  //case (state)
-    //GUESS_J1: currentSecret = secret_j2;
-    //GUESS_J2: currentSecret = secret_j1;
-    //default: currentSecret = 16'h0000;
-  //endcase
-//
-  //logic [3:0] bullsTemp, cowsTemp;
-  //logic [3:0] guessMaks, secretMask;
-//end
-
-always_ff @(posedge confirm) begin
+always @(posedge confirm) begin
   if (~confirmed) begin
     guess_i <= guess;
     confirmed <= 1;
