@@ -1,22 +1,8 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
-add wave -position insertpoint  \
-sim:/calculadora_top_tb/clock
-add wave -position insertpoint  \
-sim:/calculadora_top_tb/reset
-add wave -position insertpoint  \
-sim:/calculadora_top_tb/cmd
-add wave -position insertpoint  \
-sim:/calculadora_top_tb/guess
-add wave -position insertpoint  \
-sim:/calculadora_top_tb/d1
-
-add wave -position insertpoint  \
-sim:/calculadora_top_tb/result
-
-
-add wave -position insertpoint  \
-sim:/ctrl/a
+add wave -position insertpoint  \ sim:/bullsCows_tb/clock
+add wave -position insertpoint  \ sim:/bullsCows_tb/guess
+add wave -position insertpoint  \ sim:/bullsCows/state_t
 
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {1241 ns} 0}
