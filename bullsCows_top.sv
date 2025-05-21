@@ -8,12 +8,27 @@ module bullsCows_top(
     output logic [7:0] seg // XDC: 8 segmentos
 );
 
+typedef enum {
+   SECRET_J1,
+   SECRET_J2,
+   GUESS_J1,
+   GUESS_J2,
+   DISPLAY_RESULT_J1,
+   DISPLAY_RESULT_J2,
+   WIN,
+   FIM
+} state_t;
 
 logic internal_clock;
 logic internal_reset;
 
 logic [15:0] guess_input;
 logic confirm_input;
+
+state_t game_state;
+logic win_flag;
+logic [3:0] bulls;
+logic [3:0] cows;
 
 logic [5:0] display_data_d1;
 logic [5:0] display_data_d2;
@@ -25,18 +40,17 @@ logic [5:0] display_data_d7;
 logic [5:0] display_data_d8;
 
 logic [7:0] an_out;
-logic [6:0] seg_out;
+logic [7:0] seg_out;
 
 assign internal_clock = clock;
-assign internal_reset = ~CPU_RESETN; // TODO na ignorancia pq negar?
+assign internal_reset = ~CPU_RESETN;
 assign guess_input = SW;
 assign confirm_input = confirm;
 
-bullsCows u_bullsCows(
-    .guess(guess_input),
-    .confirm(confirm_input),
+display_manager u_display_manager(
     .clock(internal_clock),
     .reset(internal_reset),
+    .confirm(confirm_input),
 
     .d1(display_data_d1),
     .d2(display_data_d2),
@@ -67,14 +81,6 @@ dspl_drv_NexysA7 u_display_driver (
 
 assign an = an_out;
 
-assign seg[0] = seg_out[7];
-assign seg[1] = seg_out[6];
-assign seg[2] = seg_out[5];
-assign seg[3] = seg_out[4];
-assign seg[4] = seg_out[3];
-assign seg[5] = seg_out[2];
-assign seg[6] = seg_out[1];
-assign seg[7] = seg_out[0];
-assign seg[8] = seg_out[0];
+assign seg = seg_out;
 
 endmodule

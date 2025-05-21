@@ -3,177 +3,194 @@ module bullsCows (
   input logic confirm,
   input logic clock,
   input logic reset,
-
-  output logic [5:0] d1,
-  output logic [5:0] d2,
-  output logic [5:0] d3,
-  output logic [5:0] d4,
-  output logic [5:0] d5,
-  output logic [5:0] d6,
-  output logic [5:0] d7,
-  output logic [5:0] d8
+  output logic state,
+  output logic [3:0] bulls,
+  output logic [3:0] cows
   );
 
-  typedef enum {
-    SECRET_J1,
-    SECRET_J2,
-    GUESS_J1,
-    GUESS_J2,
-    WIN
-  } state_t;
+typedef enum {
+  SECRET_J1,
+  SECRET_J2,
+  GUESS_J1,
+  GUESS_J2,
+  DISPLAY_RESULT_J1,
+  DISPLAY_RESULT_J2,
+  WIN,
+  FIM
+} state_t;
 
-  state_t current_state;
+state_t current_state, next_state;
 
-  logic [15:0] secret_j1, secret_j2;
-  logic [3:0] bulls, cows;
-  logic confirmed = confirm;
-  
+logic [15:0] secret_j1, secret_j2;
+logic [15:0] guess_i;
+logic confirmed;
+// logic [63:0] bullseye := 64'b11111111; <- Não sei pq isso ta aqui
+logic win_flag; // <- Achei mais facil pensar desse jeito
 
-  always_ff @(posedge clock or posedge reset) begin
-    if (reset) begin
-      current_state <= SECRET_J1;
-        d1 <= 6'b100000;
-        d2 <= 6'b100000;
-        d3 <= 6'b100000;
-        d4 <= 6'b100000;
-        d5 <= 6'b100000;
-        d6 <= 6'b100000;
-        d7 <= 6'b100000;
-        d8 <= 6'b100000;
-    end else begin
-      if (confirmed) begin
-        case (current_state)
-          SECRET_J1: begin
-              secret_j1 <= guess;
-              d1 <= 6'b001011; // "J"
-              d2 <= 6'b000001; // "1"
-              d3 <= 6'b100000; // " "
-              d4 <= 6'b000101; // "S"
-              d5 <= 6'b001110; // "E"
-              d6 <= 6'b000111; // "T"
-              d7 <= 6'b001100; // "U"
-              d8 <= 6'b001101; // "P"
-              confirmed <= 1'b0;
-              current_state <= SECRET_J2;
-          end
+//  8 1's para o b
 
-          SECRET_J2: begin
-              secret_j2 <= guess;
-              d1 <= 6'b001011; // "J"
-              d2 <= 6'b000010; // "2"
-              d3 <= 6'b100000; // " "
-              d4 <= 6'b000101; // "S"
-              d5 <= 6'b001110; // "E"
-              d6 <= 6'b000111; // "T"
-              d7 <= 6'b001100; // "U"
-              d8 <= 6'b001101; // "P"
-              confirmed <= 1'b0;
-              current_state <= GUESS_J1;
-          end
+assign win_flag = (state == WIN);
 
-          GUESS_J1: begin
-              bulls <= 3'b000;
-
-              if (guess[3:0] == secret_j2[3:0]) begin
-                bulls <= bulls + 1;
-              end
-              if (guess[7:4] == secret_j2[7:4]) begin
-                bulls <= bulls + 1;
-              end
-              if (guess[11:8] == secret_j2[11:8]) begin
-                bulls <= bulls + 1;
-              end
-              if (guess[15:12] == secret_j2[15:12]) begin
-                bulls <= bulls + 1;
-              end
-
-              cows <= 3'b000;
-
-              if (guess[3:0] == secret_j2[7:4] || guess[3:0] == secret_j2[11:8] || guess[3:0] == secret_j2[15:12]) begin
-                cows <= cows + 1;
-              end
-              if (guess[7:4] == secret_j2[3:0] || guess[7:4] == secret_j2[11:8] || guess[7:4] == secret_j2[15:12]) begin
-                cows <= cows + 1;
-              end
-              if (guess[11:8] == secret_j2[3:0] || guess[11:8] == secret_j2[7:4] || guess[11:8] == secret_j2[15:12]) begin
-                cows <= cows + 1;
-              end
-              if (guess[15:12] == secret_j2[3:0] || guess[15:12] == secret_j2[7:4] || guess[15:12] == secret_j2[11:8]) begin
-                cows <= cows + 1;
-              end
-
-              d1 <= {1'b0, bulls[3:0], 1'b0}; // "X" Bulls "{anodeOff=0, bulls, DP=0}"
-              d2 <= 6'b100000;                // " " 
-              d3 <= 6'b000111;                // "T"
-              d4 <= 6'b000000;                // "O"
-              d5 <= {1'b0, cows[3:0], 1'b0};  // "X" Cows "{anodeOff=0, cows, DP=0}
-              d6 <= 6'b100000;                // " "
-              d7 <= 6'b001100;                // "V"
-              d8 <= 6'b001010;                // "A"
-
-              if (bulls == 3'b100) begin
-                confirmed <= 1'b0;
-                current_state <= WIN;
-              end else begin 
-                confirmed <= 1'b0;
-                current_state <= GUESS_J2;
-              end
-          end
-
-          GUESS_J2: begin
-              bulls <= 3'b000;
-
-              if (guess[3:0] == secret_j1[3:0]) begin
-                bulls <= bulls + 1;
-              end
-              if (guess[7:4] == secret_j1[7:4]) begin
-                bulls <= bulls + 1;
-              end
-              if (guess[11:8] == secret_j1[11:8]) begin
-                bulls <= bulls + 1;
-              end
-              if (guess[15:12] == secret_j1[15:12]) begin
-                bulls <= bulls + 1;
-              end
-
-              cows <= 3'b000;
-
-              if (guess[3:0] == secret_j1[7:4] || guess[3:0] == secret_j1[11:8] || guess[3:0] == secret_j1[15:12]) begin
-                cows <= cows + 1;
-              end
-              if (guess[7:4] == secret_j1[3:0] || guess[7:4] == secret_j1[11:8] || guess[7:4] == secret_j1[15:12]) begin
-                cows <= cows + 1;
-              end
-              if (guess[11:8] == secret_j1[3:0] || guess[11:8] == secret_j1[7:4] || guess[11:8] == secret_j1[15:12]) begin
-                cows <= cows + 1;
-              end
-              if (guess[15:12] == secret_j1[3:0] || guess[15:12] == secret_j1[7:4] || guess[15:12] == secret_j1[11:8]) begin
-                cows <= cows + 1;
-              end
-
-              d1 <= {1'b0, bulls[3:0], 1'b0}; // "X" Bulls "{anodeOff=0, bulls, DP=0}"
-              d2 <= 6'b100000;                // " " 
-              d3 <= 6'b000111;                // "T"
-              d4 <= 6'b000000;                // "O"
-              d5 <= {1'b0, cows[3:0], 1'b0};  // "X" Cows "{anodeOff=0, cows, DP=0}
-              d6 <= 6'b100000;                // " "
-              d7 <= 6'b001100;                // "V"
-              d8 <= 6'b001010;                // "A"
-
-              if (bulls == 3'b100) begin
-                confirmed <= 1'b0;
-                current_state <= WIN;
-              end else begin 
-                confirmed <= 1'b0;
-                current_state <= GUESS_J1;
-              end
-          end
-
-          WIN: begin
-              confirmed <= 1'b0;
-              current_state <= SECRET_J1;
-          end
-        endcase
+always @(posedge clock or posedge reset) begin
+  if (reset) begin
+    current_state <= SECRET_J1;
+  end else begin
+    current_state <= next_state;
+    case (state)
+      SECRET_J1: begin
+        if (confirmed) begin
+          secret_j1 <= guess_i;
+          confirmed <= 0;
+          current_state <= SECRET_J2;
+        end
       end
-    end 
+
+      SECRET_J2: begin
+        if (confirmed) begin
+          secret_j2 <= guess_i;
+          confirmed <= 0;
+          current_state <= GUESS_J1;
+        end
+      end
+
+      GUESS_J1: begin
+        next_state <= GUESS_J1;
+        if (confirmed) begin
+          bulls <= 000;
+
+          if (guess_i[3:0] == secret_j2[3:0]) begin
+            bulls <= bulls + 1;
+          end
+          if (guess_i[7:4] == secret_j2[7:4]) begin
+            bulls <= bulls + 1;
+          end
+          if (guess_i[11:8] == secret_j2[11:8]) begin
+            bulls <= bulls + 1;
+          end
+          if (guess_i[15:12] == secret_j2[15:12]) begin
+            bulls <= bulls + 1;
+          end
+
+          cows <= 000;
+
+          if (guess_i[3:0] == secret_j2[7:4] || guess_i[3:0] == secret_j2[11:8] || guess_i[3:0] == secret_j2[15:12]) begin
+            cows <= cows + 1;
+          end
+          if (guess_i[7:4] == secret_j2[3:0] || guess_i[7:4] == secret_j2[11:8] || guess_i[7:4] == secret_j2[15:12]) begin
+            cows <= cows + 1;
+          end
+          if (guess_i[11:8] == secret_j2[3:0] || guess_i[11:8] == secret_j2[7:4] || guess_i[11:8] == secret_j2[15:12]) begin
+            cows <= cows + 1;
+          end
+          if (guess_i[15:12] == secret_j2[3:0] || guess_i[15:12] == secret_j2[7:4] || guess_i[15:12] == secret_j2[11:8]) begin
+            cows <= cows + 1;
+          end
+
+          if (bulls == 3'b100) begin
+            next_state <= WIN;
+          end else begin 
+            next_state <= DISPLAY_RESULT_J1;
+          end
+
+          confirmed <= 0;
+        end
+      end
+
+      GUESS_J2: begin
+        next_state <= GUESS_J2;
+        if (confirmed) begin
+          bulls <= 000;
+
+          if (guess_i[3:0] == secret_j1[3:0]) begin
+            bulls <= bulls + 1;
+          end
+          if (guess_i[7:4] == secret_j1[7:4]) begin
+            bulls <= bulls + 1;
+          end
+          if (guess_i[11:8] == secret_j1[11:8]) begin
+            bulls <= bulls + 1;
+          end
+          if (guess_i[15:12] == secret_j1[15:12]) begin
+            bulls <= bulls + 1;
+          end
+
+          cows <= 000;
+
+          if (guess_i[3:0] == secret_j1[7:4] || guess_i[3:0] == secret_j1[11:8] || guess_i[3:0] == secret_j1[15:12]) begin
+            cows <= cows + 1;
+          end
+          if (guess_i[7:4] == secret_j1[3:0] || guess_i[7:4] == secret_j1[11:8] || guess_i[7:4] == secret_j1[15:12]) begin
+            cows <= cows + 1;
+          end
+          if (guess_i[11:8] == secret_j1[3:0] || guess_i[11:8] == secret_j1[7:4] || guess_i[11:8] == secret_j1[15:12]) begin
+            cows <= cows + 1;
+          end
+          if (guess_i[15:12] == secret_j1[3:0] || guess_i[15:12] == secret_j1[7:4] || guess_i[15:12] == secret_j1[11:8]) begin
+            cows <= cows + 1;
+          end
+
+          if (bulls == 3'b100) begin
+            next_state <= WIN;
+          end else begin 
+            next_state <= DISPLAY_RESULT_J2;
+          end
+
+          confirmed <= 0;
+        end
+      end
+
+      DISPLAY_RESULT_J1: begin
+        next_state <= DISPLAY_RESULT_J1;
+
+        if (confirmed) begin
+          next_state <= GUESS_J2;
+          confirmed <= 0;
+        end
+      end
+
+      DISPLAY_RESULT_J2: begin
+        next_state <= DISPLAY_RESULT_J2;
+
+        if (confirmed) begin
+          next_state <= GUESS_J1;
+          confirmed <= 0;
+        end
+      end
+
+      WIN: begin
+        next_state <= WIN;
+
+        if (confirmed) begin
+          next_state <= SECRET_J1;
+          confirmed <= 0;
+        end
+      end
+
+      FIM: begin
+        // Logica para quando alguem fizer 4 pontos
+        // Ou seja, quando alguem ganhar
+      end
+    endcase
+  end
+end
+
+//always_comb begin
+  //logic [15:0] currentSecret;
+  //case (state)
+    //GUESS_J1: currentSecret = secret_j2;
+    //GUESS_J2: currentSecret = secret_j1;
+    //default: currentSecret = 16'h0000;
+  //endcase
+//
+  //logic [3:0] bullsTemp, cowsTemp;
+  //logic [3:0] guessMaks, secretMask;
+//end
+
+always_ff @(posedge confirm) begin
+  if (~confirmed) begin
+    guess_i <= guess;
+    confirmed <= 1;
+  end
+end
+
 endmodule

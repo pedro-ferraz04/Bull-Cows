@@ -1,21 +1,7 @@
-typedef enum {
-    SECRET_J1,
-    SECRET_J2,
-    GUESS_J1,
-    GUESS_J2,
-    DISPLAY_RESULT_J1,
-    DISPLAY_RESULT_J2,
-    WIN,
-    FIM
-} state_t;
-
 module display_manager(
     input logic clock,
     input logic reset,
-    input state_t current_state,
-    input logic win_flag,
-    input logic [3:0] bulls,
-    input logic [3:0] cows,
+    input logic confirm,
 
     output logic [5:0] d1,
     output logic [5:0] d2,
@@ -27,98 +13,54 @@ module display_manager(
     output logic [5:0] d8
 );
 
-    always @(posedge clock) begin // TODO reset
+    logic btn_prev, btn_tick;
+    always @(posedge clock) begin
+            // detecta borda de subida
+            btn_tick <= confirm & ~btn_prev;
+            btn_prev <= confirm;
+    end
+    
+    logic confirmed;
+    always @(posedge clock) begin
+        if (btn_tick) begin
+            confirmed <= ~confirmed;
+        end
+    end
+    typedef enum {
+        IDLE,
+        SECRET_J1,
+        SECRET_J2,
+        GUESS_J1,
+        GUESS_J2,
+        WIN
+    } state_t;
+
+    state_t current_state = IDLE;
+    
+    always @(posedge clock) begin
+        if (confirmed) begin
+            case(current_state)
+                IDLE: begin
+                    d1 <= 6'b100001; d2 <= 6'b100001; d3 <= 6'b100001; d4 <= 6'b100001;
+                    d5 <= 6'b100001; d6 <= 6'b100001; d7 <= 6'b100001; d8 <= 6'b100001;
+                    current_state <= SECRET_J1;
+                end
+                SECRET_J1: begin
+                    d1 <= 6'b111011; d2 <= 6'b111001; d3 <= 6'b101111; d4 <= 6'b111101;
+                    d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100011; d8 <= 6'b110111;
+                    current_state <= SECRET_J2;
+                end
+                
+                SECRET_J2: begin
+                    d1 <= 6'b111011; d2 <= 6'b111001; d3 <= 6'b101111; d4 <= 6'b111101;
+                    d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100101; d8 <= 6'b110111;
+                    current_state <= SECRET_J1;
+                end
+            endcase
+        end 
         
-        d1 <= 6'b100000;
-        d2 <= 6'b100000;
-        d3 <= 6'b100000;
-        d4 <= 6'b100000;
-        d5 <= 6'b100000;
-        d6 <= 6'b100000;
-        d7 <= 6'b100000;
-        d8 <= 6'b100000;
-
-        case (current_state)
-            SECRET_J1: begin
-                d1 <= 6'b001011; // "J"
-                d2 <= 6'b000001; // "1"
-                d3 <= 6'b100000; // " "
-                d4 <= 6'b000101; // "S"
-                d5 <= 6'b001110; // "E"
-                d6 <= 6'b000111; // "T"
-                d7 <= 6'b001100; // "U"
-                d8 <= 6'b001101; // "P"
-            end
-
-            SECRET_J2: begin
-                d1 <= 6'b001011; // "J"
-                d2 <= 6'b000010; // "2"
-                d3 <= 6'b100000; // " "
-                d4 <= 6'b000101; // "S"
-                d5 <= 6'b001110; // "E"
-                d6 <= 6'b000111; // "T"
-                d7 <= 6'b001100; // "U"
-                d8 <= 6'b001101; // "P"
-            end
-
-            GUESS_J1: begin
-                d1 <= 6'b001011; // "J"
-                d2 <= 6'b000001; // "1"
-                d3 <= 6'b100000; // " "
-                d4 <= 6'b000110; // "G"
-                d5 <= 6'b001100; // "U"
-                d6 <= 6'b001110; // "E"
-                d7 <= 6'b000101; // "S"
-                d8 <= 6'b000101; // "S"
-            end
-
-            GUESS_J2: begin
-                d1 <= 6'b001011; // "J"
-                d2 <= 6'b000010; // "2"
-                d3 <= 6'b100000; // " "
-                d4 <= 6'b000110; // "G"
-                d5 <= 6'b001100; // "U"
-                d6 <= 6'b001110; // "E"
-                d7 <= 6'b000101; // "S"
-                d8 <= 6'b000101; // "S"
-            end
-
-            DISPLAY_RESULT_J1: begin
-                d1 <= {1'b0, bulls[3:0], 1'b0}; // "X" Bulls "{anodeOff=0, bulls, DP=0}"
-                d2 <= 6'b100000;                // " " 
-                d3 <= 6'b000111;                // "T"
-                d4 <= 6'b000000;                // "O"
-                d5 <= {1'b0, cows[3:0], 1'b0};  // "X" Cows "{anodeOff=0, cows, DP=0}
-                d6 <= 6'b100000;                // " "
-                d7 <= 6'b001100;                // "V"
-                d8 <= 6'b001010;                // "A"
-            end
-
-            DISPLAY_RESULT_J2: begin
-                d1 <= {1'b0, bulls[3:0], 1'b0}; // "X" Bulls "{anodeOff=0, bulls, DP=0}
-                d2 <= 6'b100000;                // " " 
-                d3 <= 6'b000111;                // "T"
-                d4 <= 6'b000000;                // "O"
-                d5 <= {1'b0, cows[3:0], 1'b0};  // "X" Cows "{anodeOff=0, cows, DP=0}
-                d6 <= 6'b100000;                // " "
-                d7 <= 6'b001100;                // "V"
-                d8 <= 6'b001010;                // "A"
-            end
-
-            WIN: begin
-                d1 <= 6'b001000; // "B"
-                d2 <= 6'b001100; // "U"
-                d3 <= 6'b001001; // "L"
-                d4 <= 6'b001001; // "L"
-                d5 <= 6'b000101; // "S"
-                d6 <= 6'b001110; // "E"
-                d7 <= 6'b000100; // "Y"
-                d8 <= 6'b001110; // "E"
-            end
+        else begin
             
-            // FIM: begin
-            // Se a gente quiser da para fazer uma mensagem de FIM
-            // para quando um jogador chegar a 4 vitórias
-        endcase
+        end
     end
 endmodule

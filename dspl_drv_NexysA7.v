@@ -1,4 +1,4 @@
-    module dspl_drv_NexysA7 
+module dspl_drv_NexysA7 
 #(parameter HALF_MS_COUNT = 50000)
 (
   input clock, reset,
@@ -45,7 +45,7 @@
       else begin
         dig_selection <= dig_selection + 1;
       end
-      
+
       case (dig_selection)
         3'd0 : begin
           selected_dig <= d1[4:0];
