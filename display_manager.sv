@@ -12,20 +12,15 @@ module display_manager(
     output logic [5:0] d7,
     output logic [5:0] d8
 );
-
-    logic btn_prev, btn_tick;
-    always @(posedge clock) begin
-            // detecta borda de subida
-            btn_tick <= confirm & ~btn_prev;
-            btn_prev <= confirm;
-    end
     
     logic confirmed;
-    always @(posedge clock) begin
-        if (btn_tick) begin
-            confirmed <= ~confirmed;
-        end
-    end
+    detector_borda db (
+        .clock(clock),
+        .reset(reset),
+        .confirm(confirm),
+        .borda_subida(confirmed)
+    );
+    
     typedef enum {
         IDLE,
         SECRET_J1,
@@ -35,10 +30,21 @@ module display_manager(
         WIN
     } state_t;
 
-    state_t current_state = IDLE;
+    state_t current_state;
     
-    always @(posedge clock) begin
-        if (confirmed) begin
+    logic [15:0] secret_j1, secret_j2;
+    logic [2:0] bulls, cows;
+    
+    always @(posedge clock or posedge reset) begin
+    
+        if (reset) begin
+            current_state <= IDLE;
+            secret_j1 <= 0;
+            secret_j2 <= 0;
+            bulls <= 0;
+            cows <= 0;
+        
+        end else begin
             case(current_state)
                 IDLE: begin
                     d1 <= 6'b100001; d2 <= 6'b100001; d3 <= 6'b100001; d4 <= 6'b100001;
@@ -57,10 +63,6 @@ module display_manager(
                     current_state <= SECRET_J1;
                 end
             endcase
-        end 
-        
-        else begin
-            
         end
     end
 endmodule
