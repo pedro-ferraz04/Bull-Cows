@@ -55,7 +55,7 @@ module display_manager(
                             (SW[11:8] != SW[15:12]) )  
                         begin
                             secret_j1 <= SW;
-                            current_state <= SECRET_J1;
+                            current_state <= SECRET_J2;
                         end
                     end
                 end
