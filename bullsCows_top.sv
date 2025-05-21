@@ -51,6 +51,7 @@ display_manager u_display_manager(
     .clock(internal_clock),
     .reset(internal_reset),
     .confirm(confirm_input),
+    .SW(guess_input),
 
     .d1(display_data_d1),
     .d2(display_data_d2),

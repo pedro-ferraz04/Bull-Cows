@@ -2,6 +2,7 @@ module display_manager(
     input logic clock,
     input logic reset,
     input logic confirm,
+    input [15:0] SW,
 
     output logic [5:0] d1,
     output logic [5:0] d2,
@@ -22,7 +23,6 @@ module display_manager(
     );
     
     typedef enum {
-        IDLE,
         SECRET_J1,
         SECRET_J2,
         GUESS_J1,
@@ -38,7 +38,7 @@ module display_manager(
     always @(posedge clock or posedge reset) begin
     
         if (reset) begin
-            current_state <= IDLE;
+            current_state <= SECRET_J1;
             secret_j1 <= 0;
             secret_j2 <= 0;
             bulls <= 0;
@@ -46,18 +46,27 @@ module display_manager(
         
         end else begin
             case(current_state)
-                IDLE: begin
-                    d1 <= 6'b100001; d2 <= 6'b100001; d3 <= 6'b100001; d4 <= 6'b100001;
-                    d5 <= 6'b100001; d6 <= 6'b100001; d7 <= 6'b100001; d8 <= 6'b100001;
-                    current_state <= SECRET_J1;
-                end
                 SECRET_J1: begin
                     d1 <= 6'b111011; d2 <= 6'b111001; d3 <= 6'b101111; d4 <= 6'b111101;
                     d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100011; d8 <= 6'b110111;
+                    if (confirmed) begin
+                        if( (SW[3:0] != SW[7:4]) && 
+                            (SW[7:4] != SW[11:8]) && 
+                            (SW[11:8] != SW[15:12]) )  
+                        begin
+                            secret_j1 <= SW;
+                            current_state <= SECRET_J1;
+                        end
+                    end
+                end
+                SECRET_J2: begin
+                    
+                    d1 <= 6'b111011; d2 <= 6'b111001; d3 <= 6'b101111; d4 <= 6'b111101;
+                    d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100101; d8 <= 6'b110111;
                     current_state <= SECRET_J2;
                 end
                 
-                SECRET_J2: begin
+                GUESS_J1: begin
                     d1 <= 6'b111011; d2 <= 6'b111001; d3 <= 6'b101111; d4 <= 6'b111101;
                     d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100101; d8 <= 6'b110111;
                     current_state <= SECRET_J1;
