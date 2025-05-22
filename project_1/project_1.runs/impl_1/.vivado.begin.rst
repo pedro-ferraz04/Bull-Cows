@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado" Owner="lucas" Host="bianchessi-hp-envy-laptop" Pid="123837" HostCore="12" HostMemory="16081328">
+    </Process>
+</ProcessHandle>
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado" Owner="lucas" Host="bianchessi-hp-envy-laptop" Pid="124359" HostCore="12" HostMemory="16081328">
+    </Process>
+</ProcessHandle>

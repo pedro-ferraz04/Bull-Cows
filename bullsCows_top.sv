@@ -59,7 +59,9 @@ display_manager u_display_manager(
     .clock(internal_clock),
     .reset(internal_reset),
     .confirm(confirm_input),
-    .state(game_state),
+    .bulls(bulls),
+    .cows(cows),
+    .current_state(game_state),
 
     .d1(display_data_d1),
     .d2(display_data_d2),

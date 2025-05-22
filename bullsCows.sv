@@ -28,12 +28,18 @@ logic win_flag; // <- Achei mais facil pensar desse jeito
 
 
 // TODO assign win_flag = (state == WIN);
+assign state = current_state;
 
 always @(posedge clock or posedge reset) begin
   if (reset) begin
     current_state <= SECRET_J1;
   end else begin
     case (state)
+      IDLE: begin
+        if (confirmed) begin
+          current_state <= SECRET_J1;
+        end
+      end
       SECRET_J1: begin
         if (confirmed) begin
           secret_j1 <= guess_i;
@@ -164,23 +170,28 @@ always @(posedge clock or posedge reset) begin
   end
 end
 
-//always_comb begin
-  //logic [15:0] currentSecret;
-  //case (state)
-    //GUESS_J1: currentSecret = secret_j2;
-    //GUESS_J2: currentSecret = secret_j1;
-    //default: currentSecret = 16'h0000;
-  //endcase
-//
-  //logic [3:0] bullsTemp, cowsTemp;
-  //logic [3:0] guessMaks, secretMask;
+
+//always_ff @(posedge confirm) begin
+  //if (~confirmed) begin
+    //guess_i <= guess;
+    //confirmed <= 1;
+  //end
 //end
 
-always_ff @(posedge confirm) begin
-  if (~confirmed) begin
-    guess_i <= guess;
-    confirmed <= 1;
-  end
-end
+
+    logic btn_prev, btn_tick;
+    always @(posedge clock) begin
+            // detecta borda de subida
+            btn_tick <= confirm & ~btn_prev;
+            btn_prev <= confirm;
+    end
+    
+    logic confirmed;
+    always @(posedge clock) begin
+        if (btn_tick) begin
+            confirmed <= ~confirmed;
+        end
+    end
+
 
 endmodule

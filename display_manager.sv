@@ -2,6 +2,8 @@ module display_manager(
     input logic clock,
     input logic reset,
     input logic confirm,
+    input logic [3:0] bulls,
+    input logic [3:0] cows,
     input logic current_state,
 
     output logic [5:0] d1,
@@ -65,9 +67,24 @@ module display_manager(
             d1 <= 6'b100011; d2 <= 6'b100011; d3 <= 6'b100011; d4 <= 6'b100011;
             d5 <= 6'b100011; d6 <= 6'b100011; d7 <= 6'b100101; d8 <= 6'b110111;
           end
-      //WIN_J1,
-      //WIN_J2,
-      //DISPLAY_RESULT
+
+          WIN_J1: begin
+            d1 <= 6'b100011; d2 <= 6'b100011; d3 <= 6'b100011; d4 <= 6'b100011;
+            d5 <= 6'b100011; d6 <= 6'b100011; d7 <= 6'b100011; d8 <= 6'b110111;
+            //TODO contador
+          end
+
+          WIN_J2: begin
+            d1 <= 6'b100011; d2 <= 6'b100011; d3 <= 6'b100011; d4 <= 6'b100011;
+            d5 <= 6'b100011; d6 <= 6'b100011; d7 <= 6'b100101; d8 <= 6'b110111;
+            //TODO contador
+          end
+
+        DISPLAY_RESULT: begin 
+          d1 <= 6'b110111; d2 <= 6'b000000; d3 = {1'b0, bulls[3:0], 1'b0}; d4 <= 6'b000000;
+          d1 <= 6'b111001; d2 <= 6'b000000; d3 = {1'b0, bulls[3:0], 1'b0}; d4 <= 6'b000000;
+        end
+
       endcase
     end
 endmodule
