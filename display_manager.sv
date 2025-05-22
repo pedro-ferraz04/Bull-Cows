@@ -14,13 +14,19 @@ module display_manager(
     output logic [5:0] d8
 );
     
+    logic btn_prev, btn_tick;
+    always @(posedge clock) begin
+            // detecta borda de subida
+            btn_tick <= confirm & ~btn_prev;
+            btn_prev <= confirm;
+    end
+    
     logic confirmed;
-    detector_borda db (
-        .clock(clock),
-        .reset(reset),
-        .confirm(confirm),
-        .borda_subida(confirmed)
-    );
+    always @(posedge clock) begin
+        if (btn_tick) begin
+            confirmed <= ~confirmed;
+        end
+    end
     
     typedef enum {
         SECRET_J1,
@@ -49,7 +55,7 @@ module display_manager(
                 SECRET_J1: begin
                     d1 <= 6'b111011; d2 <= 6'b111001; d3 <= 6'b101111; d4 <= 6'b111101;
                     d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100011; d8 <= 6'b110111;
-                    if (confirmed) begin
+                    if (btn_tick) begin
                         if( (SW[3:0] != SW[7:4]) && 
                             (SW[7:4] != SW[11:8]) && 
                             (SW[11:8] != SW[15:12]) )  
@@ -59,11 +65,20 @@ module display_manager(
                         end
                     end
                 end
+                
                 SECRET_J2: begin
-                    
                     d1 <= 6'b111011; d2 <= 6'b111001; d3 <= 6'b101111; d4 <= 6'b111101;
                     d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100101; d8 <= 6'b110111;
                     current_state <= SECRET_J2;
+                    if (btn_tick) begin
+                        if( (SW[3:0] != SW[7:4]) && 
+                            (SW[7:4] != SW[11:8]) && 
+                            (SW[11:8] != SW[15:12]) )  
+                        begin
+                            secret_j2 <= SW;
+                            current_state <= GUESS_J1;
+                        end
+                    end
                 end
                 
                 GUESS_J1: begin
