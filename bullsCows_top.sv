@@ -8,35 +8,20 @@ module bullsCows_top(
     output logic [7:0] seg // XDC: 8 segmentos
 );
 
-  typedef enum {
-      IDLE,
-      SECRET_J1,
-      SECRET_J2,
-      GUESS_J1,
-      GUESS_J2,
-      WIN_J1,
-      WIN_J2
-  } state_t;
-
 logic internal_clock;
 logic internal_reset;
 
 logic [15:0] guess_input;
 logic confirm_input;
 
-state_t game_state;
-logic win_flag;
-logic [3:0] bulls;
-logic [3:0] cows;
-
-logic [5:0] display_data_d1;
-logic [5:0] display_data_d2;
-logic [5:0] display_data_d3;
-logic [5:0] display_data_d4;
-logic [5:0] display_data_d5;
-logic [5:0] display_data_d6;
-logic [5:0] display_data_d7;
-logic [5:0] display_data_d8;
+logic [5:0] d1;
+logic [5:0] d2;
+logic [5:0] d3;
+logic [5:0] d4;
+logic [5:0] d5;
+logic [5:0] d6;
+logic [5:0] d7;
+logic [5:0] d8;
 
 logic [7:0] an_out;
 logic [7:0] seg_out;
@@ -51,40 +36,17 @@ bullsCows bullsCows(
   .confirm(confirm_input),
   .clock(internal_clock),
   .reset(internal_reset),
-  .state(game_state),
-  .bulls(bulls),
-  .cows(cows)
-  );
-display_manager u_display_manager(
-    .clock(internal_clock),
-    .reset(internal_reset),
-    .confirm(confirm_input),
-    .bulls(bulls),
-    .cows(cows),
-    .current_state(game_state),
 
-    .d1(display_data_d1),
-    .d2(display_data_d2),
-    .d3(display_data_d3),
-    .d4(display_data_d4),
-    .d5(display_data_d5),
-    .d6(display_data_d6),
-    .d7(display_data_d7),
-    .d8(display_data_d8)
-);
+  .d1(d1), .d2(d2), .d3(d3), .d4(d4),
+  .d5(d5), .d6(d6), .d7(d7), .d8(d8)
+  );
 
 dspl_drv_NexysA7 u_display_driver (
     .clock(internal_clock),
     .reset(internal_reset),
-    
-    .d1(display_data_d1),
-    .d2(display_data_d2),
-    .d3(display_data_d3),
-    .d4(display_data_d4),
-    .d5(display_data_d5),
-    .d6(display_data_d6),
-    .d7(display_data_d7),
-    .d8(display_data_d8),
+
+    .d1(d1), .d2(d2), .d3(d3), .d4(d4),
+    .d5(d5), .d6(d6), .d7(d7), .d8(d8),
 
     .an(an_out),
     .dec_ddp(seg_out)
