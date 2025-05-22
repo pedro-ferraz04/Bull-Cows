@@ -38,7 +38,9 @@ bullsCows bullsCows(
   .reset(internal_reset),
 
   .d1(d1), .d2(d2), .d3(d3), .d4(d4),
-  .d5(d5), .d6(d6), .d7(d7), .d8(d8)
+  .d5(d5), .d6(d6), .d7(d7), .d8(d8),
+
+  .j1_count(J1), .j2_count(J2)
   );
 
 dspl_drv_NexysA7 u_display_driver (

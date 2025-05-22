@@ -11,23 +11,30 @@ module bullsCows (
     output logic [5:0] d5,
     output logic [5:0] d6,
     output logic [5:0] d7,
-    output logic [5:0] d8
+    output logic [5:0] d8,
+
+    output logic [7:0] j1_count,
+    output logic [7:0] j2_count
   );
 
   typedef enum {
       SECRET_J1,
       SECRET_J2,
       GUESS_J1,
-      GUESS_J2
+      GUESS_J2,
+      DISPLAY,
+      FIM
   } state_t;
 
 state_t current_state;
 
 logic [2:0] bulls, cows;
 
+logic [7:0] aux;
+
 logic [15:0] secret_j1, secret_j2;
 logic [15:0] guess_i;
-logic confirmed;
+logic confirmed, jogador;
 
 logic btn_prev, btn_tick;
   always @(posedge clock) begin
@@ -84,7 +91,7 @@ logic btn_prev, btn_tick;
           if (confirmed) begin
             secret_j2 <= guess_i;
             if (~repetidos(secret_j2)) begin
-              current_state <= SECRET_J2;
+              current_state <= GUESS_J1;
             end
             confirmed <= 0;
           end
@@ -94,8 +101,6 @@ logic btn_prev, btn_tick;
           d1 <= 6'b000000; d2 <= 6'b000000; d3 <= 6'b000000; d4 <= 6'b000000; // J1
           d5 <= 6'b000000; d6 <= 6'b000000; d7 <= 6'b100011; d8 <= 6'b110111; 
           if (confirmed) begin
-             bulls <= 0;
-             cows <= 0;
 
             if (guess_i[3:0] == secret_j2[3:0]) begin
               bulls++;
@@ -124,22 +129,15 @@ logic btn_prev, btn_tick;
             end
 
             if (bulls == 3'b100) begin
-              d1 <= 6'b111101; d2 <= 6'b101001; d3 <= 6'b111101; d4 <= 6'b101011;
-              d5 <= 6'b110011; d6 <= 6'b110011; d7 <= 6'b111001; d8 <= 6'b110001; // bullseye
-              // TODO count
-              current_state <= SECRET_J1;
-            end else begin 
-              d1 <= {2'b10, cows, 1'b1}; // "X" Cows "{anodeOn=1, bulls, DP=1}"
-              d2 <= 6'b111001; // V Vaca
-              d3 <= 6'b000000;
-              d4 <= {2'b10, bulls, 1'b1}; // "X" Bulls "{anodeOn=1, bulls, DP=1}"
-              d5 <= 6'b101001; // B Bull
-              d6 <= 6'b000000;
-              d7 <= 6'b100011;
-              d8 <= 6'b110111;
+              aux <= j1_count << 1;
+              j1_count <= aux;
+              j1_count++;
 
-              //bulls espaco 7 0 coes 12 10
-              current_state <= GUESS_J2;
+              current_state <= FIM;
+            end else begin 
+              jogador <= 0;
+              current_state <= DISPLAY;
+
             end
 
             confirmed <= 0;
@@ -150,8 +148,6 @@ logic btn_prev, btn_tick;
           d1 <= 6'b000000; d2 <= 6'b000000; d3 <= 6'b000000; d4 <= 6'b000000; // J2
           d5 <= 6'b000000; d6 <= 6'b000000; d7 <= 6'b100101; d8 <= 6'b110111;
           if (confirmed) begin
-             bulls <= 0;
-             cows <= 0;
 
             if (guess_i[3:0] == secret_j1[3:0]) begin
               bulls++;
@@ -180,25 +176,49 @@ logic btn_prev, btn_tick;
             end
 
             if (bulls == 3'b100) begin
-              d1 <= 6'b111101; d2 <= 6'b101001; d3 <= 6'b111101; d4 <= 6'b101011;
-              d5 <= 6'b110011; d6 <= 6'b110011; d7 <= 6'b111001; d8 <= 6'b110001; // bullseye
-              // TODO count
-              current_state <= SECRET_J1;
+              aux <= j1_count << 1;
+              j2_count <= aux;
+              j2_count++;
+
+              current_state <= FIM;
             end else begin 
-              d1 <= {2'b10, bulls, 1'b1}; // "X" Bulls "{anodeOff=0, bulls, DP=0}"
-              d2 <= 6'b111001; // V Vaca
-              d3 <= 6'b000000;
-              d4 <= {2'b10, cows, 1'b1};  // "X" Cows "{anodeOff=0, cows, DP=0}
-              d5 <= 6'b101001; // B Bull
-              d6 <= 6'b000000;
-              d7 <= 6'b100101;
-              d8 <= 6'b110111;
-              current_state <= GUESS_J1;
+              jogador <= 1;
+              current_state <= DISPLAY;
+
             end
 
             confirmed <= 0;
           end
         end
+
+        DISPLAY: begin
+          d1 <= 6'b110101;
+          d2 <= 6'b111001;
+          d3 <= 6'b000000;
+          d4 <= {2'b10, cows, 1'b1}; // "X" Cows "{anodeOn=1, bulls, DP=1}"
+          d5 <= 6'b100001;
+          d6 <= 6'b101111;
+          d7 <= 6'b000000;
+          d8 <= {2'b10, bulls, 1'b1}; // "X" Bulls "{anodeOn=1, bulls, DP=1}"
+          if (confirmed) begin
+            bulls <= 0;
+            cows <= 0;
+            if (~(jogador == 1)) begin
+              current_state <= GUESS_J1;
+            end else begin
+              current_state <= GUESS_J2;
+            end
+          end
+        end
+
+        FIM: begin
+          d1 <= 6'b111101; d2 <= 6'b101001; d3 <= 6'b111101; d4 <= 6'b101011;
+          d5 <= 6'b110011; d6 <= 6'b110011; d7 <= 6'b111001; d8 <= 6'b110001; // bullseye
+          if (confirmed) begin
+            current_state <= SECRET_J1;
+          end
+        end
+
       endcase
     end
   end
