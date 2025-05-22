@@ -41,10 +41,9 @@ logic btn_prev, btn_tick;
     // detecta borda de subida
     btn_tick <= confirm & ~btn_prev;
     btn_prev <= confirm;
-    guess_i <= guess;
   end
 
-  function bit repetidos(input logic [15:0] arr);
+  function automatic repetidos(input logic [15:0] arr);
     logic [3:0] num0, num1, num2, num3;
 
     num0 = arr[3:0];
@@ -78,9 +77,9 @@ logic btn_prev, btn_tick;
           d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100011; d8 <= 6'b110111;
           if (confirmed) begin
             secret_j1 <= guess_i;
-            if (~repetidos(secret_j1)) begin
+            //if (repetidos(secret_j1)) begin
               current_state <= SECRET_J2;
-            end
+            //end
             confirmed <= 0;
           end
         end
@@ -90,7 +89,7 @@ logic btn_prev, btn_tick;
           d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100101; d8 <= 6'b110111;
           if (confirmed) begin
             secret_j2 <= guess_i;
-            if (~repetidos(secret_j2)) begin
+            if (repetidos(secret_j2)) begin
               current_state <= GUESS_J1;
             end
             confirmed <= 0;
@@ -99,8 +98,9 @@ logic btn_prev, btn_tick;
 
         GUESS_J1: begin
           d1 <= 6'b000000; d2 <= 6'b000000; d3 <= 6'b000000; d4 <= 6'b000000; // J1
-          d5 <= 6'b000000; d6 <= 6'b000000; d7 <= 6'b100011; d8 <= 6'b110111; 
+          d5 <= 6'b000000; d6 <= 6'b000000; d7 <= 6'b100011; d8 <= 6'b110111;
           if (confirmed) begin
+            guess_i <= guess;
 
             if (guess_i[3:0] == secret_j2[3:0]) begin
               bulls++;
@@ -132,12 +132,10 @@ logic btn_prev, btn_tick;
               aux <= j1_count << 1;
               j1_count <= aux;
               j1_count++;
-
               current_state <= FIM;
             end else begin 
               jogador <= 0;
               current_state <= DISPLAY;
-
             end
 
             confirmed <= 0;
@@ -148,6 +146,7 @@ logic btn_prev, btn_tick;
           d1 <= 6'b000000; d2 <= 6'b000000; d3 <= 6'b000000; d4 <= 6'b000000; // J2
           d5 <= 6'b000000; d6 <= 6'b000000; d7 <= 6'b100101; d8 <= 6'b110111;
           if (confirmed) begin
+            guess_i <= guess;
 
             if (guess_i[3:0] == secret_j1[3:0]) begin
               bulls++;
@@ -176,7 +175,7 @@ logic btn_prev, btn_tick;
             end
 
             if (bulls == 3'b100) begin
-              aux <= j1_count << 1;
+              aux <= j2_count << 1;
               j2_count <= aux;
               j2_count++;
 
@@ -192,21 +191,25 @@ logic btn_prev, btn_tick;
         end
 
         DISPLAY: begin
-          d1 <= 6'b110101;
-          d2 <= 6'b111001;
-          d3 <= 6'b000000;
-          d4 <= {2'b10, cows, 1'b1}; // "X" Cows "{anodeOn=1, bulls, DP=1}"
-          d5 <= 6'b100001;
-          d6 <= 6'b101111;
-          d7 <= 6'b000000;
-          d8 <= {2'b10, bulls, 1'b1}; // "X" Bulls "{anodeOn=1, bulls, DP=1}"
+              d1 <= 6'b110101;
+              d2 <= 6'b111001;
+              d3 <= 6'b000000;
+              d4 <= {2'b10, cows, 1'b1}; // "X" Cows "{anodeOn=1, bulls, DP=1}"
+              d5 <= 6'b100001;
+              d6 <= 6'b101111;
+              d7 <= 6'b000000;
+              d8 <= {2'b10, bulls, 1'b1}; // "X" Bulls "{anodeOn=1, bulls, DP=1}"
           if (confirmed) begin
             bulls <= 0;
             cows <= 0;
             if (~(jogador == 1)) begin
               current_state <= GUESS_J1;
+              d1 <= 6'b000000; d2 <= 6'b000000; d3 <= 6'b000000; d4 <= 6'b000000; // J1
+              d5 <= 6'b000000; d6 <= 6'b000000; d7 <= 6'b100011; d8 <= 6'b110111; 
             end else begin
               current_state <= GUESS_J2;
+              d1 <= 6'b000000; d2 <= 6'b000000; d3 <= 6'b000000; d4 <= 6'b000000; // J2
+              d5 <= 6'b000000; d6 <= 6'b000000; d7 <= 6'b100101; d8 <= 6'b110111;
             end
           end
         end
@@ -216,6 +219,8 @@ logic btn_prev, btn_tick;
           d5 <= 6'b110011; d6 <= 6'b110011; d7 <= 6'b111001; d8 <= 6'b110001; // bullseye
           if (confirmed) begin
             current_state <= SECRET_J1;
+            d1 <= 6'b111011; d2 <= 6'b111001; d3 <= 6'b101111; d4 <= 6'b111101; // J1 Se7up
+            d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100011; d8 <= 6'b110111;
           end
         end
 
