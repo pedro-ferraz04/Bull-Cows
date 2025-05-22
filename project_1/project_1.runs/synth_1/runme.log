@@ -7,7 +7,7 @@
   **** SW Build 5239630 on Fri Nov 08 22:34:34 MST 2024
   **** IP Build 5239520 on Sun Nov 10 16:12:51 MST 2024
   **** SharedData Build 5239561 on Fri Nov 08 14:39:27 MST 2024
-  **** Start of session at: Wed May 21 22:27:00 2025
+  **** Start of session at: Wed May 21 23:10:19 2025
     ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
     ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 
@@ -25,13 +25,10 @@ INFO: [Designutils 20-5440] No compile time benefit to using incremental synthes
 INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 7 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 125494
+INFO: [Synth 8-7075] Helper process launched with PID 136585
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 1906.000 ; gain = 426.715 ; free physical = 3178 ; free virtual = 12156
+Starting RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 1905.656 ; gain = 425.746 ; free physical = 2356 ; free virtual = 11372
 ---------------------------------------------------------------------------------
-CRITICAL WARNING: [Synth 8-9339] data object 'confirmed' is already declared [/home/lucas/Desktop/facul/a2025_1/SD_sistemas-digitais/cows/bullsCows.sv:189]
-INFO: [Synth 8-6826] previous declaration of 'confirmed' is from here [/home/lucas/Desktop/facul/a2025_1/SD_sistemas-digitais/cows/bullsCows.sv:26]
-CRITICAL WARNING: [Synth 8-11152] second declaration of 'confirmed' is ignored [/home/lucas/Desktop/facul/a2025_1/SD_sistemas-digitais/cows/bullsCows.sv:189]
 INFO: [Synth 8-6157] synthesizing module 'bullsCows_top' [/home/lucas/Desktop/facul/a2025_1/SD_sistemas-digitais/cows/bullsCows_top.sv:1]
 INFO: [Synth 8-6157] synthesizing module 'bullsCows' [/home/lucas/Desktop/facul/a2025_1/SD_sistemas-digitais/cows/bullsCows.sv:1]
 WARNING: [Synth 8-151] case item 32'b00000000000000000000000000000010 is unreachable [/home/lucas/Desktop/facul/a2025_1/SD_sistemas-digitais/cows/bullsCows.sv:51]
@@ -95,18 +92,18 @@ WARNING: [Synth 8-7129] Port guess[2] in module bullsCows is either unconnected 
 WARNING: [Synth 8-7129] Port guess[1] in module bullsCows is either unconnected or has no load
 WARNING: [Synth 8-7129] Port guess[0] in module bullsCows is either unconnected or has no load
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 1977.969 ; gain = 498.684 ; free physical = 3103 ; free virtual = 12081
+Finished RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 1978.594 ; gain = 498.684 ; free physical = 2289 ; free virtual = 11306
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 1995.781 ; gain = 516.496 ; free physical = 3103 ; free virtual = 12081
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 1996.406 ; gain = 516.496 ; free physical = 2289 ; free virtual = 11306
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 1995.781 ; gain = 516.496 ; free physical = 3103 ; free virtual = 12081
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 1996.406 ; gain = 516.496 ; free physical = 2289 ; free virtual = 11306
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1995.781 ; gain = 0.000 ; free physical = 3103 ; free virtual = 12081
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 1996.406 ; gain = 0.000 ; free physical = 2289 ; free virtual = 11306
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
@@ -177,31 +174,31 @@ INFO: [Project 1-236] Implementation specific constraints were found while readi
 Resolution: To avoid this warning, move constraints listed in [.Xil/bullsCows_top_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2144.531 ; gain = 0.000 ; free physical = 3105 ; free virtual = 12082
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2147.156 ; gain = 0.000 ; free physical = 2297 ; free virtual = 11314
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2144.531 ; gain = 0.000 ; free physical = 3105 ; free virtual = 12082
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2147.156 ; gain = 0.000 ; free physical = 2297 ; free virtual = 11314
 INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
 INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:14 ; elapsed = 00:00:14 . Memory (MB): peak = 2144.531 ; gain = 665.246 ; free physical = 3145 ; free virtual = 12123
+Finished Constraint Validation : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2147.156 ; gain = 667.246 ; free physical = 2364 ; free virtual = 11381
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xc7a100tcsg324-1
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:14 ; elapsed = 00:00:14 . Memory (MB): peak = 2152.535 ; gain = 673.250 ; free physical = 3144 ; free virtual = 12122
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2155.160 ; gain = 675.250 ; free physical = 2364 ; free virtual = 11381
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:14 ; elapsed = 00:00:14 . Memory (MB): peak = 2152.535 ; gain = 673.250 ; free physical = 3144 ; free virtual = 12122
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2155.160 ; gain = 675.250 ; free physical = 2364 ; free virtual = 11381
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2152.535 ; gain = 673.250 ; free physical = 3144 ; free virtual = 12123
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2155.160 ; gain = 675.250 ; free physical = 2366 ; free virtual = 11384
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
@@ -254,25 +251,25 @@ WARNING: [Synth 8-7129] Port SW[2] in module bullsCows_top is either unconnected
 WARNING: [Synth 8-7129] Port SW[1] in module bullsCows_top is either unconnected or has no load
 WARNING: [Synth 8-7129] Port SW[0] in module bullsCows_top is either unconnected or has no load
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:16 ; elapsed = 00:00:17 . Memory (MB): peak = 2152.535 ; gain = 673.250 ; free physical = 3149 ; free virtual = 12132
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:17 ; elapsed = 00:00:17 . Memory (MB): peak = 2155.160 ; gain = 675.250 ; free physical = 2371 ; free virtual = 11393
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 2168.535 ; gain = 689.250 ; free physical = 3118 ; free virtual = 12109
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:23 ; elapsed = 00:00:23 . Memory (MB): peak = 2169.160 ; gain = 689.250 ; free physical = 2297 ; free virtual = 11319
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 2189.566 ; gain = 710.281 ; free physical = 3101 ; free virtual = 12092
+Finished Timing Optimization : Time (s): cpu = 00:00:23 ; elapsed = 00:00:23 . Memory (MB): peak = 2189.191 ; gain = 709.281 ; free physical = 2281 ; free virtual = 11303
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:00:23 ; elapsed = 00:00:23 . Memory (MB): peak = 2190.574 ; gain = 711.289 ; free physical = 3101 ; free virtual = 12092
+Finished Technology Mapping : Time (s): cpu = 00:00:23 ; elapsed = 00:00:23 . Memory (MB): peak = 2190.199 ; gain = 710.289 ; free physical = 2274 ; free virtual = 11295
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -290,16 +287,16 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 2350.387 ; gain = 871.102 ; free physical = 2980 ; free virtual = 11971
+Finished IO Insertion : Time (s): cpu = 00:00:26 ; elapsed = 00:00:27 . Memory (MB): peak = 2350.012 ; gain = 870.102 ; free physical = 2163 ; free virtual = 11185
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 2350.387 ; gain = 871.102 ; free physical = 2980 ; free virtual = 11971
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:26 ; elapsed = 00:00:27 . Memory (MB): peak = 2350.012 ; gain = 870.102 ; free physical = 2163 ; free virtual = 11185
 ---------------------------------------------------------------------------------
 CRITICAL WARNING: [Synth 8-6859] multi-driven net on pin bullsCows/confirmed with 1st driver pin 'bullsCows/confirmed_reg__0/Q' [/home/lucas/Desktop/facul/a2025_1/SD_sistemas-digitais/cows/bullsCows.sv:39]
-CRITICAL WARNING: [Synth 8-6859] multi-driven net on pin bullsCows/confirmed with 2nd driver pin 'bullsCows/confirmed_reg/Q' [/home/lucas/Desktop/facul/a2025_1/SD_sistemas-digitais/cows/bullsCows.sv:192]
+CRITICAL WARNING: [Synth 8-6859] multi-driven net on pin bullsCows/confirmed with 2nd driver pin 'bullsCows/confirmed_reg/Q' [/home/lucas/Desktop/facul/a2025_1/SD_sistemas-digitais/cows/bullsCows.sv:190]
 
 Report Check Netlist: 
 +------+------------------+-------+---------+-------+------------------+
@@ -311,25 +308,25 @@ Report Check Netlist:
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 2350.387 ; gain = 871.102 ; free physical = 2980 ; free virtual = 11971
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:26 ; elapsed = 00:00:27 . Memory (MB): peak = 2350.012 ; gain = 870.102 ; free physical = 2163 ; free virtual = 11185
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 2350.387 ; gain = 871.102 ; free physical = 2980 ; free virtual = 11971
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:26 ; elapsed = 00:00:27 . Memory (MB): peak = 2350.012 ; gain = 870.102 ; free physical = 2163 ; free virtual = 11185
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 2350.387 ; gain = 871.102 ; free physical = 2980 ; free virtual = 11971
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:26 ; elapsed = 00:00:27 . Memory (MB): peak = 2350.012 ; gain = 870.102 ; free physical = 2163 ; free virtual = 11185
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 2350.387 ; gain = 871.102 ; free physical = 2980 ; free virtual = 11971
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:26 ; elapsed = 00:00:27 . Memory (MB): peak = 2350.012 ; gain = 870.102 ; free physical = 2163 ; free virtual = 11185
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -359,13 +356,30 @@ Report Cell Usage:
 |12    |OBUF   |    16|
 +------+-------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 2350.387 ; gain = 871.102 ; free physical = 2980 ; free virtual = 11971
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:26 ; elapsed = 00:00:27 . Memory (MB): peak = 2350.012 ; gain = 870.102 ; free physical = 2163 ; free virtual = 11185
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 2 critical warnings and 17 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:00:24 ; elapsed = 00:00:24 . Memory (MB): peak = 2350.387 ; gain = 722.352 ; free physical = 2980 ; free virtual = 11971
-Synthesis Optimization Complete : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 2350.395 ; gain = 871.102 ; free physical = 2980 ; free virtual = 11971
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:24 ; elapsed = 00:00:25 . Memory (MB): peak = 2350.012 ; gain = 719.352 ; free physical = 2163 ; free virtual = 11185
+Synthesis Optimization Complete : Time (s): cpu = 00:00:26 ; elapsed = 00:00:27 . Memory (MB): peak = 2350.020 ; gain = 870.102 ; free physical = 2163 ; free virtual = 11185
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2350.395 ; gain = 0.000 ; free physical = 2980 ; free virtual = 11971
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2350.020 ; gain = 0.000 ; free physical = 2162 ; free virtual = 11185
 INFO: [Netlist 29-17] Analyzing 8 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2406.039 ; gain = 0.000 ; free physical = 2324 ; free virtual = 11346
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: 91f2dd36
+INFO: [Common 17-83] Releasing license: Synthesis
+29 Infos, 91 Warnings, 22 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:37 ; elapsed = 00:00:33 . Memory (MB): peak = 2406.039 ; gain = 932.066 ; free physical = 2324 ; free virtual = 11346
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 1547.672; main = 1547.672; forked = 268.142
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 3070.895; main = 2406.043; forked = 915.730
+INFO: [runtcl-6] Synthesis results are not added to the cache due to CRITICAL_WARNING
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2430.051 ; gain = 0.000 ; free physical = 2324 ; free virtual = 11346
+INFO: [Common 17-1381] The checkpoint '/home/lucas/Desktop/facul/a2025_1/SD_sistemas-digitais/cows/project_1/project_1.runs/synth_1/bullsCows_top.dcp' has been generated.
+INFO: [Vivado 12-24828] Executing command : report_utilization -file bullsCows_top_utilization_synth.rpt -pb bullsCows_top_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Wed May 21 23:10:58 2025...

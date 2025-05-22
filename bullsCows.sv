@@ -178,20 +178,18 @@ end
   //end
 //end
 
-
-    logic btn_prev, btn_tick;
-    always @(posedge clock) begin
-            // detecta borda de subida
-            btn_tick <= confirm & ~btn_prev;
-            btn_prev <= confirm;
-    end
-    
-    logic confirmed;
-    always @(posedge clock) begin
-        if (btn_tick) begin
-            confirmed <= ~confirmed;
-        end
-    end
+  logic btn_prev, btn_tick;
+  always @(posedge clock) begin
+          // detecta borda de subida
+          btn_tick <= confirm & ~btn_prev;
+          btn_prev <= confirm;
+  end
+  
+  always @(posedge clock) begin
+      if (btn_tick) begin
+          confirmed <= ~confirmed;
+      end
+  end
 
 
 endmodule
