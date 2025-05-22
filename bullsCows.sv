@@ -22,24 +22,41 @@ module bullsCows (
   } state_t;
 
 state_t current_state;
-initial current_state = GUESS_J1;
 
-logic [3:0] bulls, cows; // TODO range?
+logic [2:0] bulls, cows;
 
 logic [15:0] secret_j1, secret_j2;
 logic [15:0] guess_i;
 logic confirmed;
 
 logic btn_prev, btn_tick;
-always @(posedge clock) begin
-        // detecta borda de subida
-        btn_tick <= confirm & ~btn_prev;
-        btn_prev <= confirm;
-end
+  always @(posedge clock) begin
+    // detecta borda de subida
+    btn_tick <= confirm & ~btn_prev;
+    btn_prev <= confirm;
+    guess_i <= guess;
+  end
 
-  always @(posedge clock or posedge reset) begin
+  function bit repetidos(input logic [15:0] arr);
+    logic [3:0] num0, num1, num2, num3;
+
+    num0 = arr[3:0];
+    num1 = arr[7:4];
+    num2 = arr[11:8];
+    num3 = arr[15:12];
+
+    if (num0 == num1 || num0 == num2 || num0 == num3 ||
+        num1 == num2 || num1 == num3 || num2 == num3) begin
+      return 1'b1;
+    end else begin
+      return 1'b0;
+    end
+
+  endfunction
+
+  always @(posedge clock , posedge reset) begin
     if (btn_tick) begin
-        confirmed <= ~confirmed;
+      confirmed <= ~confirmed;
     end
 
     if (reset) begin
@@ -48,13 +65,16 @@ end
       d5 <= 6'b100001; d6 <= 6'b100001; d7 <= 6'b100001; d8 <= 6'b100001;
     end else begin
       case (current_state)
+
         SECRET_J1: begin
           d1 <= 6'b111011; d2 <= 6'b111001; d3 <= 6'b101111; d4 <= 6'b111101; // J1 Se7up
           d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100011; d8 <= 6'b110111;
           if (confirmed) begin
             secret_j1 <= guess_i;
+            if (~repetidos(secret_j1)) begin
+              current_state <= SECRET_J2;
+            end
             confirmed <= 0;
-            current_state <= SECRET_J2;
           end
         end
 
@@ -63,57 +83,62 @@ end
           d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100101; d8 <= 6'b110111;
           if (confirmed) begin
             secret_j2 <= guess_i;
+            if (~repetidos(secret_j2)) begin
+              current_state <= SECRET_J2;
+            end
             confirmed <= 0;
-            current_state <= GUESS_J1;
           end
         end
 
         GUESS_J1: begin
+          d1 <= 6'b000000; d2 <= 6'b000000; d3 <= 6'b000000; d4 <= 6'b000000; // J1
+          d5 <= 6'b000000; d6 <= 6'b000000; d7 <= 6'b100011; d8 <= 6'b110111; 
           if (confirmed) begin
-            bulls <= 3'b000;
+             bulls <= 0;
+             cows <= 0;
 
             if (guess_i[3:0] == secret_j2[3:0]) begin
-              bulls <= bulls + 1;
+              bulls++;
             end
             if (guess_i[7:4] == secret_j2[7:4]) begin
-              bulls <= bulls + 1;
+              bulls++;
             end
             if (guess_i[11:8] == secret_j2[11:8]) begin
-              bulls <= bulls + 1;
+              bulls++;
             end
             if (guess_i[15:12] == secret_j2[15:12]) begin
-              bulls <= bulls + 1;
+              bulls++;
             end
-
-            cows <= 3'b000;
 
             if (guess_i[3:0] == secret_j2[7:4] || guess_i[3:0] == secret_j2[11:8] || guess_i[3:0] == secret_j2[15:12]) begin
-              cows <= cows + 1;
+              cows++;
             end
             if (guess_i[7:4] == secret_j2[3:0] || guess_i[7:4] == secret_j2[11:8] || guess_i[7:4] == secret_j2[15:12]) begin
-              cows <= cows + 1;
+              cows++;
             end
             if (guess_i[11:8] == secret_j2[3:0] || guess_i[11:8] == secret_j2[7:4] || guess_i[11:8] == secret_j2[15:12]) begin
-              cows <= cows + 1;
+              cows++;
             end
             if (guess_i[15:12] == secret_j2[3:0] || guess_i[15:12] == secret_j2[7:4] || guess_i[15:12] == secret_j2[11:8]) begin
-              cows <= cows + 1;
+              cows++;
             end
 
             if (bulls == 3'b100) begin
-              d1 <= 6'b100011; d2 <= 6'b110111; d3 <= 6'b000000; d4 <= 6'b100011;
-              d5 <= 6'b110111; d6 <= 6'b000000; d7 <= 6'b100011; d8 <= 6'b110111; // J1 J1 J1
+              d1 <= 6'b111101; d2 <= 6'b101001; d3 <= 6'b111101; d4 <= 6'b101011;
+              d5 <= 6'b110011; d6 <= 6'b110011; d7 <= 6'b111001; d8 <= 6'b110001; // bullseye
               // TODO count
               current_state <= SECRET_J1;
             end else begin 
-              d1 <= {2'b10, bulls[2:0], 1'b1}; // "X" Bulls "{anodeOff=0, bulls, DP=0}"
+              d1 <= {2'b10, cows, 1'b1}; // "X" Cows "{anodeOn=1, bulls, DP=1}"
               d2 <= 6'b111001; // V Vaca
               d3 <= 6'b000000;
-              d4 <= {2'b10, cows[2:0], 1'b1};  // "X" Cows "{anodeOff=0, cows, DP=0}
+              d4 <= {2'b10, bulls, 1'b1}; // "X" Bulls "{anodeOn=1, bulls, DP=1}"
               d5 <= 6'b101001; // B Bull
               d6 <= 6'b000000;
-              d7 <= 6'b000000;
-              d8 <= 6'b000000;
+              d7 <= 6'b100011;
+              d8 <= 6'b110111;
+
+              //bulls espaco 7 0 coes 12 10
               current_state <= GUESS_J2;
             end
 
@@ -122,58 +147,58 @@ end
         end
 
         GUESS_J2: begin
+          d1 <= 6'b000000; d2 <= 6'b000000; d3 <= 6'b000000; d4 <= 6'b000000; // J2
+          d5 <= 6'b000000; d6 <= 6'b000000; d7 <= 6'b100101; d8 <= 6'b110111;
           if (confirmed) begin
-            bulls <= 3'b000;
+             bulls <= 0;
+             cows <= 0;
 
             if (guess_i[3:0] == secret_j1[3:0]) begin
-              bulls <= bulls + 1;
+              bulls++;
             end
             if (guess_i[7:4] == secret_j1[7:4]) begin
-              bulls <= bulls + 1;
+              bulls++;
             end
             if (guess_i[11:8] == secret_j1[11:8]) begin
-              bulls <= bulls + 1;
+              bulls++;
             end
             if (guess_i[15:12] == secret_j1[15:12]) begin
-              bulls <= bulls + 1;
+              bulls++;
             end
-
-            cows <= 3'b000;
 
             if (guess_i[3:0] == secret_j1[7:4] || guess_i[3:0] == secret_j1[11:8] || guess_i[3:0] == secret_j1[15:12]) begin
-              cows <= cows + 1;
+              cows++;
             end
             if (guess_i[7:4] == secret_j1[3:0] || guess_i[7:4] == secret_j1[11:8] || guess_i[7:4] == secret_j1[15:12]) begin
-              cows <= cows + 1;
+              cows++;
             end
             if (guess_i[11:8] == secret_j1[3:0] || guess_i[11:8] == secret_j1[7:4] || guess_i[11:8] == secret_j1[15:12]) begin
-              cows <= cows + 1;
+              cows++;
             end
             if (guess_i[15:12] == secret_j1[3:0] || guess_i[15:12] == secret_j1[7:4] || guess_i[15:12] == secret_j1[11:8]) begin
-              cows <= cows + 1;
+              cows++;
             end
 
             if (bulls == 3'b100) begin
-              d1 <= 6'b100101; d2 <= 6'b110111; d3 <= 6'b000000; d4 <= 6'b100101;
-              d5 <= 6'b110111; d6 <= 6'b000000; d7 <= 6'b100101; d8 <= 6'b110111;
+              d1 <= 6'b111101; d2 <= 6'b101001; d3 <= 6'b111101; d4 <= 6'b101011;
+              d5 <= 6'b110011; d6 <= 6'b110011; d7 <= 6'b111001; d8 <= 6'b110001; // bullseye
               // TODO count
               current_state <= SECRET_J1;
             end else begin 
-              d1 <= {2'b10, bulls[2:0], 1'b1}; // "X" Bulls "{anodeOff=0, bulls, DP=0}"
+              d1 <= {2'b10, bulls, 1'b1}; // "X" Bulls "{anodeOff=0, bulls, DP=0}"
               d2 <= 6'b111001; // V Vaca
               d3 <= 6'b000000;
-              d4 <= {2'b10, cows[2:0], 1'b1};  // "X" Cows "{anodeOff=0, cows, DP=0}
+              d4 <= {2'b10, cows, 1'b1};  // "X" Cows "{anodeOff=0, cows, DP=0}
               d5 <= 6'b101001; // B Bull
               d6 <= 6'b000000;
-              d7 <= 6'b000000;
-              d8 <= 6'b000000;
+              d7 <= 6'b100101;
+              d8 <= 6'b110111;
               current_state <= GUESS_J1;
             end
 
             confirmed <= 0;
           end
         end
-
       endcase
     end
   end
