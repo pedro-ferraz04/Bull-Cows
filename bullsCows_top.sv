@@ -8,16 +8,15 @@ module bullsCows_top(
     output logic [7:0] seg // XDC: 8 segmentos
 );
 
-typedef enum {
-   SECRET_J1,
-   SECRET_J2,
-   GUESS_J1,
-   GUESS_J2,
-   DISPLAY_RESULT_J1,
-   DISPLAY_RESULT_J2,
-   WIN,
-   FIM
-} state_t;
+  typedef enum {
+      IDLE,
+      SECRET_J1,
+      SECRET_J2,
+      GUESS_J1,
+      GUESS_J2,
+      WIN_J1,
+      WIN_J2
+  } state_t;
 
 logic internal_clock;
 logic internal_reset;
@@ -47,10 +46,20 @@ assign internal_reset = ~CPU_RESETN;
 assign guess_input = SW;
 assign confirm_input = confirm;
 
+bullsCows bullsCows(
+  .guess(guess_input),
+  .confirm(confirm_input),
+  .clock(internal_clock),
+  .reset(internal_reset),
+  .state(game_state),
+  .bulls(bulls),
+  .cows(cows)
+  );
 display_manager u_display_manager(
     .clock(internal_clock),
     .reset(internal_reset),
     .confirm(confirm_input),
+    .state(game_state),
 
     .d1(display_data_d1),
     .d2(display_data_d2),

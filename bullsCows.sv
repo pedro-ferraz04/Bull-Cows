@@ -8,34 +8,31 @@ module bullsCows (
   output logic [3:0] cows
   );
 
-typedef enum {
-  SECRET_J1,
-  SECRET_J2,
-  GUESS_J1,
-  GUESS_J2,
-  DISPLAY_RESULT_J1,
-  DISPLAY_RESULT_J2,
-  WIN,
-  FIM
-} state_t;
+  typedef enum {
+      IDLE,
+      SECRET_J1,
+      SECRET_J2,
+      GUESS_J1,
+      GUESS_J2,
+      WIN_J1,
+      WIN_J2,
+      DISPLAY_RESULT
+  } state_t;
 
-state_t current_state, next_state;
+state_t current_state;
 
 logic [15:0] secret_j1, secret_j2;
 logic [15:0] guess_i;
 logic confirmed;
-// logic [63:0] bullseye := 64'b11111111; <- Não sei pq isso ta aqui
 logic win_flag; // <- Achei mais facil pensar desse jeito
 
-//  8 1's para o b
 
-assign win_flag = (state == WIN);
+// TODO assign win_flag = (state == WIN);
 
 always @(posedge clock or posedge reset) begin
   if (reset) begin
     current_state <= SECRET_J1;
   end else begin
-    current_state <= next_state;
     case (state)
       SECRET_J1: begin
         if (confirmed) begin
@@ -54,7 +51,7 @@ always @(posedge clock or posedge reset) begin
       end
 
       GUESS_J1: begin
-        next_state <= GUESS_J1;
+        current_state <= GUESS_J1;
         if (confirmed) begin
           bulls <= 000;
 
@@ -87,9 +84,9 @@ always @(posedge clock or posedge reset) begin
           end
 
           if (bulls == 3'b100) begin
-            next_state <= WIN;
+            current_state <= WIN_J1;
           end else begin 
-            next_state <= DISPLAY_RESULT_J1;
+            current_state <= DISPLAY_RESULT;
           end
 
           confirmed <= 0;
@@ -97,7 +94,7 @@ always @(posedge clock or posedge reset) begin
       end
 
       GUESS_J2: begin
-        next_state <= GUESS_J2;
+        current_state <= GUESS_J2;
         if (confirmed) begin
           bulls <= 000;
 
@@ -130,46 +127,39 @@ always @(posedge clock or posedge reset) begin
           end
 
           if (bulls == 3'b100) begin
-            next_state <= WIN;
+            current_state <= WIN_J2;
           end else begin 
-            next_state <= DISPLAY_RESULT_J2;
+            current_state <= DISPLAY_RESULT;
           end
 
           confirmed <= 0;
         end
       end
 
-      DISPLAY_RESULT_J1: begin
-        next_state <= DISPLAY_RESULT_J1;
+      DISPLAY_RESULT: begin
 
         if (confirmed) begin
-          next_state <= GUESS_J2;
+          current_state <= SECRET_J1;
           confirmed <= 0;
         end
       end
 
-      DISPLAY_RESULT_J2: begin
-        next_state <= DISPLAY_RESULT_J2;
+      WIN_J1: begin
 
         if (confirmed) begin
-          next_state <= GUESS_J1;
+          current_state <= SECRET_J1;
           confirmed <= 0;
         end
       end
 
-      WIN: begin
-        next_state <= WIN;
+      WIN_J2: begin
 
         if (confirmed) begin
-          next_state <= SECRET_J1;
+          current_state <= SECRET_J1;
           confirmed <= 0;
         end
       end
 
-      FIM: begin
-        // Logica para quando alguem fizer 4 pontos
-        // Ou seja, quando alguem ganhar
-      end
     endcase
   end
 end

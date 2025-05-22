@@ -2,6 +2,7 @@ module display_manager(
     input logic clock,
     input logic reset,
     input logic confirm,
+    input logic current_state,
 
     output logic [5:0] d1,
     output logic [5:0] d2,
@@ -26,41 +27,47 @@ module display_manager(
             confirmed <= ~confirmed;
         end
     end
-    typedef enum {
-        IDLE,
-        SECRET_J1,
-        SECRET_J2,
-        GUESS_J1,
-        GUESS_J2,
-        WIN
-    } state_t;
 
-    state_t current_state = IDLE;
-    
+  typedef enum {
+      IDLE,
+      SECRET_J1,
+      SECRET_J2,
+      GUESS_J1,
+      GUESS_J2,
+      WIN_J1,
+      WIN_J2,
+      DISPLAY_RESULT
+  } state_t;
+
     always @(posedge clock) begin
-        if (confirmed) begin
-            case(current_state)
-                IDLE: begin
-                    d1 <= 6'b100001; d2 <= 6'b100001; d3 <= 6'b100001; d4 <= 6'b100001;
-                    d5 <= 6'b100001; d6 <= 6'b100001; d7 <= 6'b100001; d8 <= 6'b100001;
-                    current_state <= SECRET_J1;
-                end
-                SECRET_J1: begin
-                    d1 <= 6'b111011; d2 <= 6'b111001; d3 <= 6'b101111; d4 <= 6'b111101;
-                    d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100011; d8 <= 6'b110111;
-                    current_state <= SECRET_J2;
-                end
-                
-                SECRET_J2: begin
-                    d1 <= 6'b111011; d2 <= 6'b111001; d3 <= 6'b101111; d4 <= 6'b111101;
-                    d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100101; d8 <= 6'b110111;
-                    current_state <= SECRET_J1;
-                end
-            endcase
-        end 
-        
-        else begin
-            
-        end
+      case(current_state)
+          IDLE: begin
+            d1 <= 6'b100011; d2 <= 6'b100011; d3 <= 6'b100011; d4 <= 6'b100011;
+            d5 <= 6'b100011; d6 <= 6'b100011; d7 <= 6'b100011; d8 <= 6'b100011;
+          end
+
+          SECRET_J1: begin
+            d1 <= 6'b111011; d2 <= 6'b111001; d3 <= 6'b101111; d4 <= 6'b111101;
+            d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100011; d8 <= 6'b110111;
+          end
+
+          SECRET_J2: begin
+            d1 <= 6'b111011; d2 <= 6'b111001; d3 <= 6'b101111; d4 <= 6'b111101;
+            d5 <= 6'b101011; d6 <= 6'b000001; d7 <= 6'b100101; d8 <= 6'b110111;
+          end
+
+          GUESS_J1: begin
+            d1 <= 6'b100011; d2 <= 6'b100011; d3 <= 6'b100011; d4 <= 6'b100011;
+            d5 <= 6'b100011; d6 <= 6'b100011; d7 <= 6'b100011; d8 <= 6'b110111;
+          end
+
+          GUESS_J2: begin
+            d1 <= 6'b100011; d2 <= 6'b100011; d3 <= 6'b100011; d4 <= 6'b100011;
+            d5 <= 6'b100011; d6 <= 6'b100011; d7 <= 6'b100101; d8 <= 6'b110111;
+          end
+      //WIN_J1,
+      //WIN_J2,
+      //DISPLAY_RESULT
+      endcase
     end
 endmodule
