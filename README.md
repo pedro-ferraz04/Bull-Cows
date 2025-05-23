@@ -28,7 +28,7 @@ O sistema foi implementado em **SystemVerilog** e estruturado em dois módulos p
   
 - **Funções críticas**:  
 
-  - `repetidos`: Verifica dígitos repetidos no número mágico (ex: "1123" é inválido).
+  - `repetidos`: Verifica dígitos repetidos no número mágico (ex: "1234" é inválido).
   - `count_bulls` e `count_cows`: Calculam touros (dígitos corretos na posição certa) e vacas (dígitos corretos na posição errada).
 
 ```
