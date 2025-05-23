@@ -1,3 +1,6 @@
+AUTHORS: ARTHUR ISOPPO, CLEYSSO SCHWANCK, LUCAS BIANCHESSI, PEDRO FERRAZ
+GITHUB: https://github.com/pedro-ferraz04/Bull-Cows
+
 # 🔗 [Vídeo Demonstração do Bulls & Cows](https://youtu.be/isaDQs7UBkk?feature=shared). 
 
 # **Introdução**  
